@@ -25,8 +25,7 @@ class BaseTest:
 
     @pytest.fixture(scope='function')
     def delete_all_todos(self) -> None:
-        todos_response = self.http_session.get(url=self.base_url + '/todos')
+        todos_response = self.http_session.get(url=self.base_url + Endpoints.todos)
         todos = json.loads(todos_response.content)
         for todo in todos:
-            print(todo)
-            self.http_session.delete(url=self.base_url + Endpoints.todo_by_id.format(todo_id=str(todo['id'])))
+            self.http_session.delete(url=self.base_url + Endpoints.todo_by_id.format(todo_id=todo['id']))

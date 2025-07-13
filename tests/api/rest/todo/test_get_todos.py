@@ -1,6 +1,7 @@
 import pytest
 
 # from api.requests.todo_request import TodoRequest
+from config.endpoints import Endpoints
 from testrunner.base_test import BaseTest
 
 
@@ -8,7 +9,7 @@ from testrunner.base_test import BaseTest
 class TestGetTodos(BaseTest):
     def test_get_todos_with_existing_entries(self):
         """Получение пустого списка TODO при пустой БД"""
-        response = self.http_session.get(url=self.base_url + '/todos')
+        response = self.http_session.get(url=self.base_url + Endpoints.todos)
 
         assert response.status_code == 200
         body = response.json()
