@@ -2,7 +2,6 @@ import requests
 
 from api.rest.models.models import CredsUsernamePassword
 
-
 # class HTTPSession(requests.Session):
 #     __instance = None
 #     def __new__(cls,
@@ -39,7 +38,6 @@ class Request:
         self,
         http_session: requests.Session,
         base_url: str,
-
         auth_creds: CredsUsernamePassword | None = None,
     ):
         self.__http_session: requests.Session = requests.Session()

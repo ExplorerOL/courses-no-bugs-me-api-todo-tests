@@ -5,7 +5,6 @@ import pytest
 import requests
 import requests.auth
 
-from config.config_general import config_general
 from config.endpoints import Endpoints
 from data.creds import auth_user_creds
 

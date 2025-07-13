@@ -1,7 +1,5 @@
 import pytest
 
-from config.config_general import config_general
-
 # from api.requests.todo_request import TodoRequest
 from testrunner.base_test import BaseTest
 
