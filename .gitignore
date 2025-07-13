@@ -1,0 +1,4 @@
+*.pyc
+reports/*
+tmp
+.venv
