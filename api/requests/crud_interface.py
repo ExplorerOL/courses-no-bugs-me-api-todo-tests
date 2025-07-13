@@ -1,10 +1,15 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import TypeVar
 
 T = TypeVar('T')
 
 
 class CRUDInterface(ABC):
+    @abstractmethod
     def create(self, data: T) -> T: ...
+
+    @abstractmethod
     def update(self, id: int, data: T) -> T: ...
+
+    @abstractmethod
     def delete(self, id: int) -> T: ...
