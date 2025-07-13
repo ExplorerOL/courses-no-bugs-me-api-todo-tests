@@ -5,7 +5,7 @@ from config.endpoints import Endpoints
 from testrunner.base_test import BaseTest
 
 
-@pytest.mark.usefixtures('delete_all_todos')
+@pytest.mark.usefixtures('delete_all_todos_scope_test')
 class TestGetTodos(BaseTest):
     def test_get_todos_with_existing_entries(self):
         """Получение пустого списка TODO при пустой БД"""

@@ -24,7 +24,7 @@ class BaseTest:
         return f'{self.__URL}:{self.__PORT}'
 
     @pytest.fixture(scope='function')
-    def delete_all_todos(self) -> None:
+    def delete_all_todos_scope_test(self) -> None:
         todos_response = self.http_session.get(url=self.base_url + Endpoints.todos)
         todos = json.loads(todos_response.content)
         for todo in todos:
