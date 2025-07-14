@@ -24,10 +24,10 @@ class BaseTest:
     def base_url(self):
         return f'{self.__URL}:{self.__PORT}'
 
-    def create_todo(self, data: ToDo) -> None:
+    def create_todo(self, todo_data: ToDo) -> None:
         self.http_session.post(
             url=self.base_url + Endpoints.todos,
-            data=json.dumps(asdict(data)),
+            data=json.dumps(asdict(todo_data)),
             headers={'Content-Type': 'application/json'},
         )
 

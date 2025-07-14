@@ -10,7 +10,7 @@ from testrunner.base_test import BaseTest
 
 
 @pytest.mark.usefixtures('delete_all_todos_scope_test')
-class TestPostTodos(BaseTest):
+class TestPutTodos(BaseTest):
     def test_create_todo_with_valid_data(self):
         new_todo = ToDo(id=1, text='New Task', completed=False)
 
