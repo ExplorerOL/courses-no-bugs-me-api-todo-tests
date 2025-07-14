@@ -4,10 +4,10 @@ from typing import overload
 from requests import Response
 
 from config.endpoints import Endpoints
-from src.requests.crud_interface import CRUDInterface
-from src.requests.request import Request
-from src.requests.search_interface import SearchInterface
-from src.rest.models.models import ToDo
+from src.models.todo import ToDo
+from src.todo.requests.crud_interface import CRUDInterface
+from src.todo.requests.request import Request
+from src.todo.requests.search_interface import SearchInterface
 
 
 class ToDoRequest(CRUDInterface, SearchInterface, Request):

@@ -1,11 +1,11 @@
 from http import HTTPStatus
 from typing import overload
 
-from src.requests.crud_interface import CRUDInterface
-from src.requests.request import Request
-from src.requests.search_interface import SearchInterface
-from src.requests.todo_request import ToDoRequest
-from src.rest.models.models import ToDo
+from src.models.todo import ToDo
+from src.todo.requests.crud_interface import CRUDInterface
+from src.todo.requests.request import Request
+from src.todo.requests.search_interface import SearchInterface
+from src.todo.requests.todo_request import ToDoRequest
 
 
 class ValidatedToDoRequest(Request, CRUDInterface, SearchInterface):
