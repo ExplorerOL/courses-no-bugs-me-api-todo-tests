@@ -11,7 +11,7 @@ from testrunner.base_test import BaseTest
 @pytest.mark.usefixtures('delete_all_todos_scope_test')
 class TestGetTodos(BaseTest):
     def test_get_todo_when_database_is_empty(self):
-        """"Получение пустого списка TODO, когда база данных пуста""""
+        """ "Получение пустого списка TODO, когда база данных пуста"""
         response = self.http_session.get(url=self.base_url + Endpoints.todos)
 
         assert response.status_code == 200
