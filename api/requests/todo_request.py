@@ -11,23 +11,16 @@ from config.endpoints import Endpoints
 
 
 class ToDoRequest(CRUDInterface, SearchInterface, Request):
-    # def __init__(
-    #     self,
-    #     base_url: str,
-    #     auth_creds: CredsUsernamePassword | None = None,
-    # ):
-    #     super().__init__(base_url=base_url, auth_creds=auth_creds)
-
-    # @overload
+    @overload
     def read_all(self) -> Response:
         return self._http_session.get(self._base_url + Endpoints.todos)
 
-    # @overload
-    # def read_all(self, offset: int, limit: int) -> Response:
-    #     return self.__http_session.get(
-    #         self.__base_url + Endpoints.todos,
-    #         params={'offset': offset, 'limit': limit},
-    #     )
+    @overload
+    def read_all(self, offset: int, limit: int) -> Response:
+        return self.__http_session.get(
+            self.__base_url + Endpoints.todos,
+            params={'offset': offset, 'limit': limit},
+        )
 
     def create(self, data) -> Response:
         return self._http_session.post(

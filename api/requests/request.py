@@ -18,12 +18,9 @@ class Request:
         base_url: str,
         auth_creds: CredsUsernamePassword | None = None,
     ):
-        print('Init TodoRequest')
         self._base_url = base_url
         self._auth_creds = auth_creds
 
-        print('Init http session')
         self._http_session = HTTPSession()
-        print(f'HTTPSession = {self._http_session!r}')
         if auth_creds is not None:
             self._http_session.auth = (self._auth_creds.username, self._auth_creds.password)
