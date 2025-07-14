@@ -30,8 +30,8 @@ class ToDoRequest(CRUDInterface, SearchInterface, Request):
 
     def update(self, id, data: ToDo) -> Response:
         return self._http_session.put(
-            url=self._base_url + Endpoints.todo_by_id.format(id=id), data=json.dumps(data)
+            url=self._base_url + Endpoints.todo_by_id.format(todo_id=id), data=json.dumps(data)
         )
 
     def delete(self, id) -> Response:
-        return self._http_session.delete(url=self._base_url + Endpoints.todo_by_id.format(id=id))
+        return self._http_session.delete(url=self._base_url + Endpoints.todo_by_id.format(todo_id=id))
