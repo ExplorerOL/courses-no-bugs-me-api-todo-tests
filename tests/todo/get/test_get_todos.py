@@ -43,7 +43,8 @@ class TestGetTodos(BaseTest):
             self.create_todo(ToDo(i, 'Task ' + str(i), bool(i % 2)))
 
         response = self.http_session.get(
-            url=self.base_url + Endpoints.todos, params={'limit': 2, 'offset': 2}
+            url=self.base_url + Endpoints.todos,
+            params={'limit': 2, 'offset': 2},
         )
         assert response.status_code == 200
         assert response.headers['Content-Type'] == 'application/json'
@@ -57,13 +58,39 @@ class TestGetTodos(BaseTest):
 
     def test_get_todos_with_invalid_offset_and_limit(self):
         """Передача некорректных значений в offset и limit"""
+        response = self.http_session.get(
+            url=self.base_url + Endpoints.todos,
+            params={'limit': 2, 'offset': -1},
+        )
+        assert response.status_code == 400
+        assert 'text/plain' in response.headers['Content-Type']
+        assert response.text == 'Invalid query string'
+
+        response = self.http_session.get(
+            url=self.base_url + Endpoints.todos,
+            params={'limit': 'abc', 'offset': 0},
+        )
+        assert response.status_code == 400
+        assert 'text/plain' in response.headers['Content-Type']
+        assert response.text == 'Invalid query string'
+
+        response = self.http_session.get(
+            url=self.base_url + Endpoints.todos,
+            params={'limit': 2, 'offset': ''},
+        )
+        assert response.status_code == 400
+        assert 'text/plain' in response.headers['Content-Type']
+        assert response.text == 'Invalid query string'
 
     def test_get_todos_with_excessive_limit(self):
         """Проверка ответа при превышении максимально допустимого значения limit"""
         for i in range(1, 11):
             self.create_todo(ToDo(i, 'Task ' + str(i), bool(i % 2)))
 
-        response = self.http_session.get(url=self.base_url + Endpoints.todos, params={'limit': 1000})
+        response = self.http_session.get(
+            url=self.base_url + Endpoints.todos,
+            params={'limit': 1000},
+        )
         assert response.status_code == 200
         assert response.headers['Content-Type'] == 'application/json'
         body = response.json()
