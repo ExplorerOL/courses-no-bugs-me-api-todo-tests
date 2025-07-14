@@ -1,4 +1,4 @@
 *.pyc
-reports/*
+reports
 tmp
 .venv
