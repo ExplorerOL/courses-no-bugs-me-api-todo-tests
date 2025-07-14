@@ -1,7 +1,7 @@
 import pytest
 
-from api.rest.models.models import ToDo
 from config.endpoints import Endpoints
+from src.models.todo import ToDo
 from testrunner.base_test import BaseTest
 
 

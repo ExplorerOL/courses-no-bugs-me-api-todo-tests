@@ -1,14 +1,13 @@
-# from api.requests.request import HTTPSession
+# from src.requests.request import HTTPSession
 import json
 from dataclasses import asdict
 
 import pytest
 import requests
-import requests.auth
 
-from api.rest.models.models import ToDo
 from config.endpoints import Endpoints
 from data.creds import auth_user_creds
+from src.models.todo import ToDo
 
 
 class BaseTest:

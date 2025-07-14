@@ -1,6 +1,6 @@
 import requests
 
-from api.rest.models.models import CredsUsernamePassword
+from src.rest.models.models import CredsUsernamePassword
 
 
 class HTTPSession(requests.Session):

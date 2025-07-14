@@ -3,11 +3,11 @@ from typing import overload
 
 from requests import Response
 
-from api.requests.crud_interface import CRUDInterface
-from api.requests.request import Request
-from api.requests.search_interface import SearchInterface
-from api.rest.models.models import ToDo
 from config.endpoints import Endpoints
+from src.requests.crud_interface import CRUDInterface
+from src.requests.request import Request
+from src.requests.search_interface import SearchInterface
+from src.rest.models.models import ToDo
 
 
 class ToDoRequest(CRUDInterface, SearchInterface, Request):
