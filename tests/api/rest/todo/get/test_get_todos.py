@@ -1,8 +1,5 @@
-from dataclasses import asdict
-
 import pytest
 
-from api.requests.todo_request import ToDoRequest
 from api.rest.models.models import ToDo
 from config.endpoints import Endpoints
 from testrunner.base_test import BaseTest

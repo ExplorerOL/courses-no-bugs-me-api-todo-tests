@@ -11,17 +11,6 @@ from config.endpoints import Endpoints
 
 
 class ToDoRequest(CRUDInterface, SearchInterface, Request):
-    @overload
-    def read_all(self) -> Response:
-        return self._http_session.get(self._base_url + Endpoints.todos)
-
-    @overload
-    def read_all(self, offset: int, limit: int) -> Response:
-        return self.__http_session.get(
-            self.__base_url + Endpoints.todos,
-            params={'offset': offset, 'limit': limit},
-        )
-
     def create(self, data) -> Response:
         return self._http_session.post(
             self._base_url + Endpoints.todos,
@@ -35,3 +24,14 @@ class ToDoRequest(CRUDInterface, SearchInterface, Request):
 
     def delete(self, id) -> Response:
         return self._http_session.delete(url=self._base_url + Endpoints.todo_by_id.format(todo_id=id))
+
+    @overload
+    def read_all(self, offset: int, limit: int) -> Response:
+        return self.__http_session.get(
+            self.__base_url + Endpoints.todos,
+            params={'offset': offset, 'limit': limit},
+        )
+
+    @overload
+    def read_all(self) -> Response:
+        return self._http_session.get(self._base_url + Endpoints.todos)
