@@ -13,7 +13,7 @@ from config.endpoints import Endpoints
 class ValidatedToDoRequest(Request, CRUDInterface, SearchInterface):
     def __init__(self, base_url, http_session):
         super().__init__(base_url=base_url, http_session=http_session)
-        self.__todo_request = ToDoRequest(base_url=self.__base_url, http_session=self.__http_session)
+        self.__todo_request = ToDoRequest(base_url=self._base_url, http_session=self._http_session)
 
     def create(self, data) -> str:
         response = self.__todo_request.create(data)
@@ -28,6 +28,6 @@ class ValidatedToDoRequest(Request, CRUDInterface, SearchInterface):
 
     @overload
     def read_all(self, limit, offset) -> Response:
-        response = self.__http_session.get(self.__base_url + Endpoints.todos)
+        response = self._http_session.get(self._base_url + Endpoints.todos)
         assert response.status_code == HTTPStatus.OK
         return response.json()
