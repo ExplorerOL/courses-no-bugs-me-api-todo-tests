@@ -8,7 +8,7 @@ from testrunner.base_test import BaseTest
 @pytest.mark.usefixtures('delete_all_todos_scope_test')
 class TestGetTodos(BaseTest):
     def test_get_todo_when_database_is_empty(self):
-        """ "Получение пустого списка TODO, когда база данных пуста"""
+        """Получение пустого списка TODO, когда база данных пуста"""
         response = self.http_session.get(url=self.base_url + Endpoints.todos)
 
         assert response.status_code == 200
@@ -54,3 +54,19 @@ class TestGetTodos(BaseTest):
 
         assert body[1].get('id') == 4
         assert body[1].get('text') == 'Task 4'
+
+    def test_get_todos_with_invalid_offset_and_limit(self):
+        """Передача некорректных значений в offset и limit"""
+
+    def test_get_todos_with_excessive_limit(self):
+        """Проверка ответа при превышении максимально допустимого значения limit"""
+        for i in range(1, 11):
+            self.create_todo(ToDo(i, 'Task ' + str(i), bool(i % 2)))
+
+        response = self.http_session.get(url=self.base_url + Endpoints.todos, params={'limit': 1000})
+        assert response.status_code == 200
+        assert response.headers['Content-Type'] == 'application/json'
+        body = response.json()
+        todos = [ToDo(**todo) for todo in body]
+        print(todos)
+        assert len(todos) == 10
