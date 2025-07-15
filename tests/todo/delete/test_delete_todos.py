@@ -3,26 +3,21 @@ from http import HTTPStatus
 import pytest
 
 from src.models.todo import ToDo
+from src.todo.requests.validated_todo_request import ValidatedToDoRequest
 from tests.todo.base_test import BaseTest
 
 
 @pytest.mark.usefixtures('delete_all_todos_scope_test')
 class TestDeleteTodos(BaseTest):
-    def test_delete_existing_todo_with_valid_auth(self):
+    def test_delete_existing_todo_with_valid_auth(self, validated_todo_request: ValidatedToDoRequest):
         """Успешное удаление существующего TODO с корректной авторизацией"""
         todo = ToDo(id=1, text='Task to Delete', completed=False)
-        self.create_todo(todo)
+        validated_todo_request.create(data=todo)
 
-        response = self.http_session.delete(
-            url=self.base_url + '/todos/' + str(todo.id),
-            auth=('admin', 'admin'),
-        )
-        assert response.status_code == HTTPStatus.NO_CONTENT
-        assert response.text == ''
+        body = validated_todo_request.delete(id=todo.id)
+        assert body == ''
 
-        response = self.http_session.get(url=self.base_url + '/todos')
-        assert response.status_code == HTTPStatus.OK
-        body = response.json()
+        body = validated_todo_request.read_all()
 
         found = False
         for todo_item in body:

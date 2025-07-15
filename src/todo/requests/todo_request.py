@@ -1,9 +1,10 @@
 import json
+from dataclasses import asdict
 from typing import overload
 
-from config.endpoints import Endpoints
 from requests import Response
 
+from config.endpoints import Endpoints
 from src.models.todo import ToDo
 from src.todo.requests.crud_interface import CRUDInterface
 from src.todo.requests.request import Request
@@ -11,10 +12,10 @@ from src.todo.requests.search_interface import SearchInterface
 
 
 class ToDoRequest(CRUDInterface, SearchInterface, Request):
-    def create(self, data) -> Response:
+    def create(self, data: ToDo) -> Response:
         return self._http_session.post(
             self._base_url + Endpoints.todos,
-            json=data,
+            json=asdict(data),
         )
 
     def update(self, id, data: ToDo) -> Response:
@@ -32,6 +33,5 @@ class ToDoRequest(CRUDInterface, SearchInterface, Request):
             params={'offset': offset, 'limit': limit},
         )
 
-    @overload
     def read_all(self) -> Response:
         return self._http_session.get(self._base_url + Endpoints.todos)
