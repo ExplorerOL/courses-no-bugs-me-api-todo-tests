@@ -9,7 +9,6 @@ dependencies = [
     "pytest>=8.4.1",
     "pytest-base-url>=2.1.0",
     "requests>=2.32.4",
-    "ruff>=0.12.3",
 ]
 
 testpaths = [
@@ -68,4 +67,10 @@ fixable = ["ALL"]
 [tool.uv.workspace]
 members = [
     "venv",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.2.0",
+    "ruff>=0.12.3",
 ]
