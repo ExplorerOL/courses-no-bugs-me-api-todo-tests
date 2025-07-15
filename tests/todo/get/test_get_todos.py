@@ -95,5 +95,4 @@ class TestGetTodos(BaseTest):
         assert response.headers['Content-Type'] == 'application/json'
         body = response.json()
         todos = [ToDo(**todo) for todo in body]
-        print(todos)
         assert len(todos) == 10

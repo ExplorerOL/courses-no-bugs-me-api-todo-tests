@@ -14,7 +14,6 @@ class BaseTest:
     __URL = 'http://192.168.0.4'
     __PORT = 8080
     __http_session = requests.Session()
-    __http_session.auth = (auth_user_creds.username, auth_user_creds.password)
 
     @property
     def http_session(self):
@@ -35,7 +34,10 @@ class BaseTest:
         todos_response = self.http_session.get(url=self.base_url + Endpoints.todos)
         todos = json.loads(todos_response.content)
         for todo in todos:
-            self.http_session.delete(url=self.base_url + Endpoints.todo_by_id.format(todo_id=todo['id']))
+            self.http_session.delete(
+                url=self.base_url + Endpoints.todo_by_id.format(todo_id=todo['id']),
+                auth=('admin', 'admin'),
+            )
 
     @pytest.fixture(scope='function')
     def delete_all_todos_scope_test(self) -> None:
