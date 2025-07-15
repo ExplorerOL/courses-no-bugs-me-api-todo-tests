@@ -11,8 +11,10 @@ from testrunner.base_test import BaseTest
 
 @pytest.mark.usefixtures('delete_all_todos_scope_test')
 class TestPostTodos(BaseTest):
-    def test_update_existing_todo_(self):
-        new_todo = ToDo(id=1, text='New Task', completed=False)
+    def test_update_existing_todo_with_valid_data(self):
+        new_todo = ToDo(id=1, text='Original Task', completed=False)
+        self.create_todo(todo_data=new_todo)
+        updated_todo = ToDo(id=1, text='Updated Task', completed=True)
 
         response = self.http_session.post(
             url=self.base_url + Endpoints.todos,
