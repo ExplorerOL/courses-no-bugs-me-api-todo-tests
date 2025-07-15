@@ -1,7 +1,13 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import overload
+
+from src.models.todo import ToDo
 
 
 class SearchInterface(ABC):
     @abstractmethod
-    def read_all(self, offset: int | None = None, linit: int | None = None) -> Any: ...
+    @overload
+    def read_all(self) -> list[ToDo]: ...
+
+    @abstractmethod
+    def read_all(self, offset: int, linit: int) -> list[ToDo]: ...
