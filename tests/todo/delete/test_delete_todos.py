@@ -25,8 +25,8 @@ class TestDeleteTodos(BaseTest):
         body = response.json()
 
         found = False
-        for todo in body:
-            if todo.get('id') == todo.id:
+        for todo_item in body:
+            if todo_item.get('id') == todo.id:
                 found = True
                 break
         assert not found, 'Удаленная задача все еще присутствует в списке TODO'
@@ -46,8 +46,8 @@ class TestDeleteTodos(BaseTest):
         body = response.json()
 
         found = False
-        for t in body:
-            if t.get('id') == todo.id:
+        for todo_item in body:
+            if todo_item.get('id') == todo.id:
                 found = True
                 break
         assert found, 'Задача отсутствует в списке TODO, хотя не должна была быть удалена'
@@ -68,8 +68,8 @@ class TestDeleteTodos(BaseTest):
         body = response.json()
 
         found = False
-        for t in body:
-            if t.get('id') == todo.id:
+        for todo_item in body:
+            if todo_item.get('id') == todo.id:
                 found = True
                 break
         assert found, 'Задача отсутствует в списке TODO, хотя не должна была быть удалена'

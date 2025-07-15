@@ -62,10 +62,10 @@ class TestPostTodos(BaseTest):
         body = response.json()
 
         found = False
-        for todo in body:
-            if todo.get('id') == new_todo.id:
-                assert todo.get('text') == new_todo.text
-                assert todo.get('completed') is False
+        for todo_item in body:
+            if todo_item.get('id') == new_todo.id:
+                assert todo_item.get('text') == new_todo.text
+                assert todo_item.get('completed') is False
                 found = True
                 break
         assert found, 'Созданная задача не найдена в списке TODO'
