@@ -2,13 +2,9 @@
 import json
 from dataclasses import asdict
 
-import pytest
 import requests
 
-from data.creds import auth_user_creds
 from src.models.todo import ToDo
-from src.todo.requests.todo_request import ToDoRequest
-from src.todo.requests.validated_todo_request import ValidatedToDoRequest
 
 
 class BaseTest:
@@ -41,6 +37,7 @@ class BaseTest:
     def base_url(self):
         return f'{self.__URL}:{self.__PORT}'
 
+    # TODO: удалить
     def create_todo(self, todo_data: ToDo) -> None:
         self.http_session.post(
             url=self.base_url + '/todos',
@@ -48,6 +45,7 @@ class BaseTest:
             headers={'Content-Type': 'application/json'},
         )
 
+    # TODO: удалить
     def delete_all_todos(self) -> None:
         todos_response = self.http_session.get(url=self.base_url + '/todos')
         todos = json.loads(todos_response.content)
@@ -56,24 +54,3 @@ class BaseTest:
                 url=self.base_url + '/todos/' + str(todo['id']),
                 auth=('admin', 'admin'),
             )
-
-    @pytest.fixture(scope='function')
-    def delete_all_todos_scope_test(self) -> None:
-        self.delete_all_todos()
-
-    @pytest.fixture(scope='session')
-    def todo_request(self) -> ToDoRequest:
-        return ToDoRequest(
-            base_url=self.base_url,
-            auth_creds=(
-                auth_user_creds.username,
-                auth_user_creds.password,
-            ),
-        )
-
-    @pytest.fixture(scope='session')
-    def validated_todo_request(self) -> ToDoRequest:
-        return ValidatedToDoRequest(
-            base_url=self.base_url,
-            auth_creds=auth_user_creds,
-        )

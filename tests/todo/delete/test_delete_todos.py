@@ -15,18 +15,18 @@ class TestDeleteTodos(BaseTest):
         validated_todo_request.create(data=todo)
 
         body = validated_todo_request.delete(id=todo.id)
-        assert body == ''
 
-        body = validated_todo_request.read_all()
+        assert body == ''
+        todos = validated_todo_request.read_all()
 
         found = False
-        for todo_item in body:
-            if todo_item.get('id') == todo.id:
+        for todo_item in todos:
+            if todo_item.id == todo.id:
                 found = True
                 break
         assert not found, 'Удаленная задача все еще присутствует в списке TODO'
 
-    def test_delete_todo_without_auth_header(self):
+    def test_delete_todo_without_auth_header(self, validated_todo_request: ValidatedToDoRequest):
         """Попытка удаления TODO без заголовка Authorization"""
         todo = ToDo(id=2, text='Task to Delete', completed=False)
         self.create_todo(todo)
