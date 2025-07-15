@@ -10,7 +10,7 @@ from src.todo.requests.todo_request import ToDoRequest
 
 
 class ValidatedToDoRequest(Request, CRUDInterface, SearchInterface):
-    def __init__(self, base_url: str, auth_creds: CredsUsernamePassword):
+    def __init__(self, base_url: str, auth_creds: CredsUsernamePassword | None = None):
         super().__init__(base_url=base_url, auth_creds=auth_creds)
         self.__todo_request = ToDoRequest(base_url=self._base_url, auth_creds=self._auth_creds)
 
