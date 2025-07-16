@@ -59,4 +59,5 @@ class TestGetTodos(BaseTest):
         """Проверка ответа при превышении максимально допустимого значения limit"""
 
         todos = validated_todo_request_anonim.read_all(limit=1000, offset=0)
+
         assert len(todos) == len(created_ten_or_more_todos_with_random_data)
