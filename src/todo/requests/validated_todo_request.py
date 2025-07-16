@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from typing import overload
 
 from src.models.creds import CredsUsernamePassword
 from src.models.todo import ToDo
@@ -22,6 +21,7 @@ class ValidatedToDoRequest(Request, CRUDInterface, SearchInterface):
     def update(self, id: int, data: ToDo) -> ToDo:
         response = self.__todo_request.update(id=id, data=data)
         assert response.status_code == HTTPStatus.OK
+        assert response.headers['Content-Type'] == 'application/json'
         body_json = response.json()
         return ToDo(**body_json)
 
@@ -30,15 +30,13 @@ class ValidatedToDoRequest(Request, CRUDInterface, SearchInterface):
         assert response.status_code == HTTPStatus.NO_CONTENT
         return response.text
 
-    @overload
-    def read_all(self, limit, offset) -> list[ToDo]:
-        response = self.__todo_request.read_all(limit=limit, offset=offset)
-        assert response.status_code == HTTPStatus.OK
-        body_json = response.json()
-        return [ToDo(**todo) for todo in body_json]
+    def read_all(self, offset: int | None = None, limit: int | None = None) -> list[ToDo]:
+        if all([offset is not None, limit is not None]):
+            response = self.__todo_request.read_all(limit=limit, offset=offset)
+        else:
+            response = self.__todo_request.read_all()
 
-    def read_all(self) -> list[ToDo]:
-        response = self.__todo_request.read_all()
         assert response.status_code == HTTPStatus.OK
+        assert response.headers['Content-Type'] == 'application/json'
         body_json = response.json()
         return [ToDo(**todo) for todo in body_json]

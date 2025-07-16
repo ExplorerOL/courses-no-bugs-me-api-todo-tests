@@ -25,12 +25,11 @@ class ToDoRequest(CRUDInterface, SearchInterface, Request):
     def delete(self, id) -> Response:
         return self._http_session.delete(url=self._base_url + Endpoints.todo_by_id.format(todo_id=id))
 
-    # @overload
-    # def read_all(self, offset: int, limit: int) -> Response:
-    #     return self.__http_session.get(
-    #         self.__base_url + Endpoints.todos,
-    #         params={'offset': offset, 'limit': limit},
-    #     )
-
-    def read_all(self) -> Response:
-        return self._http_session.get(self._base_url + Endpoints.todos)
+    def read_all(self, offset: int | None = None, limit: int | None = None) -> Response:
+        if all([offset is not None, limit is not None]):
+            return self._http_session.get(
+                self._base_url + Endpoints.todos,
+                params={'offset': offset, 'limit': limit},
+            )
+        else:
+            return self._http_session.get(self._base_url + Endpoints.todos)
