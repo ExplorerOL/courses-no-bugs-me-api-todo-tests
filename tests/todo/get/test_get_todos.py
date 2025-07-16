@@ -58,5 +58,3 @@ class TestGetTodos(BaseTest):
 
         todos = validated_todo_request_anonim.read_all(limit=1000, offset=0)
         assert len(todos) == 10
-
-        # assert response.headers['Content-Type'] == 'application/json'
