@@ -1,3 +1,5 @@
+from itertools import zip_longest
+
 import pytest
 
 from src.models.todo import ToDo
@@ -13,36 +15,34 @@ class TestGetTodos(BaseTest):
         todos = validated_todo_request_anonim.read_all()
         assert len(todos) == 0
 
-    def test_get_todos_with_existing_entries(self, validated_todo_request_anonim: ValidatedToDoRequest):
+    def test_get_todos_with_existing_entries(
+        self,
+        validated_todo_request_anonim: ValidatedToDoRequest,
+        created_ten_or_more_todos_with_random_data: list[ToDo],
+    ):
         """Получение списка TODO с существующими записями"""
-        todo1 = ToDo(id=1, text='Task 1', completed=False)
-        todo2 = ToDo(id=2, text='Task 2', completed=True)
-
-        validated_todo_request_anonim.create(data=todo1)
-        validated_todo_request_anonim.create(data=todo2)
-
         todos = validated_todo_request_anonim.read_all()
-        assert len(todos) == 2
 
-        assert todos[0].id == 1
-        assert todos[0].text == 'Task 1'
-        assert todos[0].completed is False
+        for expected_todo, actual_todo in zip_longest(created_ten_or_more_todos_with_random_data, todos):
+            assert expected_todo.id == actual_todo.id
+            assert expected_todo.text == actual_todo.text
+            assert expected_todo.completed == actual_todo.completed
 
-        assert todos[1].id == 2
-        assert todos[1].text == 'Task 2'
-        assert todos[1].completed is True
-
-    def test_get_todos_with_offset_and_limit(self, validated_todo_request_anonim: ValidatedToDoRequest):
+    def test_get_todos_with_offset_and_limit(
+        self,
+        validated_todo_request_anonim: ValidatedToDoRequest,
+        created_ten_or_more_todos_with_random_data: list[ToDo],
+    ):
         """Использование параметров offset и limit для пагинации"""
-        for i in range(1, 6):
-            validated_todo_request_anonim.create(data=ToDo(i, 'Task ' + str(i), bool(i % 2)))
+        limit = 2
+        offset = 2
 
-        todos = validated_todo_request_anonim.read_all(limit=2, offset=2)
+        actual_todos = validated_todo_request_anonim.read_all(limit=limit, offset=offset)
 
-        assert todos[0].id == 3
-        assert todos[0].text == 'Task 3'
-        assert todos[1].id == 4
-        assert todos[1].text == 'Task 4'
+        assert len(actual_todos) == limit
+        for i in range(limit):
+            assert actual_todos[i].id == created_ten_or_more_todos_with_random_data[i + offset].id
+            assert actual_todos[i].text == created_ten_or_more_todos_with_random_data[i + offset].text
 
     def test_get_todos_with_invalid_offset_and_limit(self, todo_request_anonim: ToDoRequest):
         """Передача некорректных значений в offset и limit"""
@@ -51,10 +51,12 @@ class TestGetTodos(BaseTest):
         assert 'text/plain' in response.headers['Content-Type']
         assert response.text == 'Invalid query string'
 
-    def test_get_todos_with_excessive_limit(self, validated_todo_request_anonim: ValidatedToDoRequest):
+    def test_get_todos_with_excessive_limit(
+        self,
+        validated_todo_request_anonim: ValidatedToDoRequest,
+        created_ten_or_more_todos_with_random_data: list[ToDo],
+    ):
         """Проверка ответа при превышении максимально допустимого значения limit"""
-        for i in range(1, 11):
-            validated_todo_request_anonim.create(data=ToDo(i, 'Task ' + str(i), bool(i % 2)))
 
         todos = validated_todo_request_anonim.read_all(limit=1000, offset=0)
-        assert len(todos) == 10
+        assert len(todos) == len(created_ten_or_more_todos_with_random_data)
