@@ -19,12 +19,9 @@ class ValidatedToDoRequest(Request, CRUDInterface, SearchInterface):
         assert response.text == ''
         return response.text
 
-    def update(self, id: int, data: ToDo) -> ToDo:
+    def update(self, id: int, data: ToDo) -> None:
         response = self.__todo_request.update(id=id, data=data)
         assert response.status_code == HTTPStatus.OK
-        assert response.headers['Content-Type'] == 'application/json'
-        body_json = response.json()
-        return ToDo(**body_json)
 
     def delete(self, id: int) -> str:
         response = self.__todo_request.delete(id=id)

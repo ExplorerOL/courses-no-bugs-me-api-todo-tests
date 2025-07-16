@@ -21,10 +21,8 @@ class ToDoRequest(CRUDInterface, SearchInterface, Request):
     def update(self, id, data: ToDo) -> Response:
         return self._http_session.put(
             url=self._base_url + Endpoints.todo_by_id.format(todo_id=id),
-            data=json.dumps(
-                data,
-                headers={'Content-Type': 'application/json'},
-            ),
+            data=json.dumps(asdict(data)),
+            headers={'Content-Type': 'application/json'},
         )
 
     def delete(self, id) -> Response:
