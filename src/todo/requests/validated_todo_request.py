@@ -26,6 +26,7 @@ class ValidatedToDoRequest(Request, CRUDInterface, SearchInterface):
     def delete(self, id: int) -> str:
         response = self.__todo_request.delete(id=id)
         assert response.status_code == HTTPStatus.NO_CONTENT
+        assert response.text == ''
         return response.text
 
     def read_all(self, offset: int | None = None, limit: int | None = None) -> list[ToDo]:

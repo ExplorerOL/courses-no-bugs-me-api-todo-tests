@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from itertools import zip_longest
 
 import pytest
@@ -47,13 +48,16 @@ class TestGetTodos(BaseTest):
         for i in range(limit):
             assert actual_todos[i].id == created_ten_or_more_todos_with_random_data[i + offset].id
             assert actual_todos[i].text == created_ten_or_more_todos_with_random_data[i + offset].text
+            assert (
+                actual_todos[i].completed == created_ten_or_more_todos_with_random_data[i + offset].completed
+            )
 
     def test_get_todos_with_invalid_offset_and_limit(self, todo_request_anonim: ToDoRequest):
         """Передача некорректных значений в offset и limit"""
         # ACT
         response = todo_request_anonim.read_all(limit=2, offset=-1)
         # ASSERT
-        assert response.status_code == 400
+        assert response.status_code == HTTPStatus.BAD_REQUEST
         assert 'text/plain' in response.headers['Content-Type']
         assert response.text == 'Invalid query string'
 

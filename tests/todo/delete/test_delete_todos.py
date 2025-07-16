@@ -1,3 +1,4 @@
+import random
 from http import HTTPStatus
 
 import pytest
@@ -17,9 +18,8 @@ class TestDeleteTodos(BaseTest):
     ):
         """Успешное удаление существующего TODO с корректной авторизацией"""
         # ACT
-        body = validated_todo_request_admin.delete(id=created_todo_with_random_data.id)
+        validated_todo_request_admin.delete(id=created_todo_with_random_data.id)
         # ASSERT
-        assert body == ''
         actual_todos = validated_todo_request_admin.read_all()
         found_todo = list(
             filter(lambda todo_item: todo_item.id == created_todo_with_random_data.id, actual_todos)
@@ -73,7 +73,7 @@ class TestDeleteTodos(BaseTest):
     ):
         """Удаление TODO с несуществующим id"""
         # ACT
-        response = todo_request_admin.delete(id=999)
+        response = todo_request_admin.delete(id=random.randint(1, 1000))
         # ASSERT
         assert response.status_code == HTTPStatus.NOT_FOUND
         actual_todos = validated_todo_request_anonim.read_all()

@@ -22,8 +22,10 @@ class TestPostTodos(BaseTest):
         validated_todo_request_anonim.create(data=new_todo)
         # ASSERT
         actual_todos = validated_todo_request_anonim.read_all()
-        found_todo = list(filter(lambda todo_item: todo_item.id == new_todo.id, actual_todos))
+        found_todo = list(filter(lambda todo_item: todo_item.id == new_todo.id, actual_todos))[0]
         assert found_todo, 'Созданная задача не найдена в списке TODO'
+        assert found_todo.text == new_todo.text
+        assert found_todo.completed == new_todo.completed
 
     def test_create_todo_with_max_length_text(self, validated_todo_request_anonim: ValidatedToDoRequest):
         # ARRANGE
@@ -33,8 +35,10 @@ class TestPostTodos(BaseTest):
         validated_todo_request_anonim.create(data=new_todo)
         # ASSERT
         actual_todos = validated_todo_request_anonim.read_all()
-        found_todo = list(filter(lambda todo_item: todo_item.id == new_todo.id, actual_todos))
+        found_todo = list(filter(lambda todo_item: todo_item.id == new_todo.id, actual_todos))[0]
         assert found_todo, 'Созданная задача не найдена в списке TODO'
+        assert found_todo.text == new_todo.text
+        assert found_todo.completed == new_todo.completed
 
     def test_create_todo_with_existing_id(
         self,

@@ -24,6 +24,7 @@ class TestPutTodos(BaseTest):
         # ASSERT
         actual_todos = validated_todo_request_anonim.read_all()
         assert len(actual_todos) == 1
+        assert actual_todos[0].id == updated_todo.id
         assert actual_todos[0].text == updated_todo.text
         assert actual_todos[0].completed == updated_todo.completed
 
@@ -50,5 +51,6 @@ class TestPutTodos(BaseTest):
         )
         # ASSERT
         actual_todos = validated_todo_request_anonim.read_all()
+        assert actual_todos[0].id == created_todo_with_random_data.id
         assert actual_todos[0].text == created_todo_with_random_data.text
         assert actual_todos[0].completed == created_todo_with_random_data.completed
