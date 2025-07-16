@@ -15,11 +15,16 @@ class ToDoRequest(CRUDInterface, SearchInterface, Request):
         return self._http_session.post(
             self._base_url + Endpoints.todos,
             json=asdict(data),
+            headers={'Content-Type': 'application/json'},
         )
 
     def update(self, id, data: ToDo) -> Response:
         return self._http_session.put(
-            url=self._base_url + Endpoints.todo_by_id.format(todo_id=id), data=json.dumps(data)
+            url=self._base_url + Endpoints.todo_by_id.format(todo_id=id),
+            data=json.dumps(
+                data,
+                headers={'Content-Type': 'application/json'},
+            ),
         )
 
     def delete(self, id) -> Response:

@@ -16,6 +16,7 @@ class ValidatedToDoRequest(Request, CRUDInterface, SearchInterface):
     def create(self, data: ToDo) -> str:
         response = self.__todo_request.create(data=data)
         assert response.status_code == HTTPStatus.CREATED
+        assert response.text == ''
         return response.text
 
     def update(self, id: int, data: ToDo) -> ToDo:
