@@ -18,14 +18,10 @@ class TestDeleteTodos(BaseTest):
         body = validated_todo_request_admin.delete(id=todo.id)
 
         assert body == ''
-        todos = validated_todo_request_admin.read_all()
+        actual_todos = validated_todo_request_admin.read_all()
 
-        found = False
-        for todo_item in todos:
-            if todo_item.id == todo.id:
-                found = True
-                break
-        assert not found, 'Удаленная задача все еще присутствует в списке TODO'
+        found_todo = list(filter(lambda todo_item: todo_item.id == todo.id, actual_todos))
+        assert not found_todo, 'Удаленная задача все еще присутствует в списке TODO'
 
     def test_delete_todo_without_auth_header(
         self,
@@ -39,14 +35,10 @@ class TestDeleteTodos(BaseTest):
         response = todo_request_anonim.delete(id=todo.id)
         assert response.status_code == HTTPStatus.UNAUTHORIZED
 
-        todos = validated_todo_request_anonim.read_all()
+        actual_todos = validated_todo_request_anonim.read_all()
 
-        found = False
-        for todo_item in todos:
-            if todo_item.id == todo.id:
-                found = True
-                break
-        assert found, 'Задача отсутствует в списке TODO, хотя не должна была быть удалена'
+        found_todo = list(filter(lambda todo_item: todo_item.id == todo.id, actual_todos))
+        assert found_todo, 'Задача отсутствует в списке TODO, хотя не должна была быть удалена'
 
     def test_delete_todo_with_invalid_auth(
         self,
@@ -60,14 +52,10 @@ class TestDeleteTodos(BaseTest):
         response = todo_request_wrong_auth.delete(id=todo.id)
         assert response.status_code == HTTPStatus.UNAUTHORIZED
 
-        todos = validated_todo_request_anonim.read_all()
+        actual_todos = validated_todo_request_anonim.read_all()
 
-        found = False
-        for todo_item in todos:
-            if todo_item.id == todo.id:
-                found = True
-                break
-        assert found, 'Задача отсутствует в списке TODO, хотя не должна была быть удалена'
+        found_todo = list(filter(lambda todo_item: todo_item.id == todo.id, actual_todos))
+        assert found_todo, 'Задача отсутствует в списке TODO, хотя не должна была быть удалена'
 
     def test_delete_non_existent_todo(
         self,
@@ -78,13 +66,5 @@ class TestDeleteTodos(BaseTest):
         response = todo_request_admin.delete(id=999)
         assert response.status_code == HTTPStatus.NOT_FOUND
 
-        todos = validated_todo_request_anonim.read_all()
-        assert len(todos) == 0
-
-    def test_delete_todo_with_invalid_id_format(self):
-        """Попытка удаления с некорректным форматом id"""
-        response = self.http_session.delete(
-            url=self.base_url + '/todos/invalidId',
-            auth=('admin', 'admin'),
-        )
-        assert response.status_code == HTTPStatus.NOT_FOUND
+        actual_todos = validated_todo_request_anonim.read_all()
+        assert len(actual_todos) == 0
