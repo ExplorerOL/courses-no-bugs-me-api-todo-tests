@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from itertools import zip_longest
 
 import pytest
@@ -53,7 +54,7 @@ class TestGetTodos(BaseTest):
         # ACT
         response = todo_request_anonim.read_all(limit=2, offset=-1)
         # ASSERT
-        assert response.status_code == 400
+        assert response.status_code == HTTPStatus.BAD_REQUEST
         assert 'text/plain' in response.headers['Content-Type']
         assert response.text == 'Invalid query string'
 
