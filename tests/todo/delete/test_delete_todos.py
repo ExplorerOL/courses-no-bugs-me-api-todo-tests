@@ -69,18 +69,17 @@ class TestDeleteTodos(BaseTest):
                 break
         assert found, 'Задача отсутствует в списке TODO, хотя не должна была быть удалена'
 
-    def test_delete_non_existent_todo(self):
+    def test_delete_non_existent_todo(
+        self,
+        todo_request_admin: ToDoRequest,
+        validated_todo_request_anonim: ValidatedToDoRequest,
+    ):
         """Удаление TODO с несуществующим id"""
-        response = self.http_session.delete(
-            url=self.base_url + '/todos/999',
-            auth=('admin', 'admin'),
-        )
+        response = todo_request_admin.delete(id=999)
         assert response.status_code == HTTPStatus.NOT_FOUND
 
-        response = self.http_session.get(url=self.base_url + '/todos')
-        assert response.status_code == HTTPStatus.OK
-        body = response.json()
-        assert len(body) == 0
+        todos = validated_todo_request_anonim.read_all()
+        assert len(todos) == 0
 
     def test_delete_todo_with_invalid_id_format(self):
         """Попытка удаления с некорректным форматом id"""
