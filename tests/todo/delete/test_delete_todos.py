@@ -16,10 +16,10 @@ class TestDeleteTodos(BaseTest):
         created_todo_with_random_data: ToDo,
     ):
         """Успешное удаление существующего TODO с корректной авторизацией"""
+        # ACT
         body = validated_todo_request_admin.delete(id=created_todo_with_random_data.id)
-
+        # ASSERT
         assert body == ''
-
         actual_todos = validated_todo_request_admin.read_all()
         found_todo = list(
             filter(lambda todo_item: todo_item.id == created_todo_with_random_data.id, actual_todos)
@@ -33,14 +33,11 @@ class TestDeleteTodos(BaseTest):
         created_todo_with_random_data: ToDo,
     ):
         """Попытка удаления TODO без заголовка Authorization"""
-        # todo = ToDo(id=2, text='Task to Delete', completed=False)
-        # validated_todo_request_anonim.create(data=todo)
-
+        # ACT
         response = todo_request_anonim.delete(id=created_todo_with_random_data.id)
+        # ASSERT
         assert response.status_code == HTTPStatus.UNAUTHORIZED
-
         actual_todos = validated_todo_request_anonim.read_all()
-
         found_todo = list(
             filter(
                 lambda todo_item: todo_item.id == created_todo_with_random_data.id,
@@ -56,11 +53,11 @@ class TestDeleteTodos(BaseTest):
         created_todo_with_random_data: ToDo,
     ):
         """Попытка удаления TODO с некорректными учетными данными"""
+        # ACT
         response = todo_request_wrong_auth.delete(id=created_todo_with_random_data.id)
+        # ASSERT
         assert response.status_code == HTTPStatus.UNAUTHORIZED
-
         actual_todos = validated_todo_request_anonim.read_all()
-
         found_todo = list(
             filter(
                 lambda todo_item: todo_item.id == created_todo_with_random_data.id,
@@ -75,8 +72,9 @@ class TestDeleteTodos(BaseTest):
         validated_todo_request_anonim: ValidatedToDoRequest,
     ):
         """Удаление TODO с несуществующим id"""
+        # ACT
         response = todo_request_admin.delete(id=999)
+        # ASSERT
         assert response.status_code == HTTPStatus.NOT_FOUND
-
         actual_todos = validated_todo_request_anonim.read_all()
         assert len(actual_todos) == 0
