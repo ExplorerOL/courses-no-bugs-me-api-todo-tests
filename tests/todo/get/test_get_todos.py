@@ -32,15 +32,15 @@ class TestGetTodos(BaseTest):
             assert expected_todo.text == actual_todo.text
             assert expected_todo.completed == actual_todo.completed
 
+    @pytest.mark.parametrize('limit, offset', [(2, 2)])
     def test_get_todos_with_offset_and_limit(
         self,
         validated_todo_request_anonim: ValidatedToDoRequest,
         created_ten_or_more_todos_with_random_data: list[ToDo],
+        limit: int,
+        offset: int,
     ):
         """Использование параметров offset и limit для пагинации"""
-        # ARRANGE
-        limit = 2
-        offset = 2
         # ACT
         actual_todos = validated_todo_request_anonim.read_all(limit=limit, offset=offset)
         # ASSERT
@@ -52,10 +52,13 @@ class TestGetTodos(BaseTest):
                 actual_todos[i].completed == created_ten_or_more_todos_with_random_data[i + offset].completed
             )
 
-    def test_get_todos_with_invalid_offset_and_limit(self, todo_request_anonim: ToDoRequest):
+    @pytest.mark.parametrize('limit, offset', [(2, -1)])
+    def test_get_todos_with_invalid_offset_and_limit(
+        self, todo_request_anonim: ToDoRequest, limit: int, offset: int
+    ):
         """Передача некорректных значений в offset и limit"""
         # ACT
-        response = todo_request_anonim.read_all(limit=2, offset=-1)
+        response = todo_request_anonim.read_all(limit=limit, offset=offset)
         # ASSERT
         assert response.status_code == HTTPStatus.BAD_REQUEST
         assert 'text/plain' in response.headers['Content-Type']
