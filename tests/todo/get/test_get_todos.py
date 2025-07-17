@@ -28,9 +28,7 @@ class TestGetTodos(BaseTest):
         todos = validated_todo_request_anonim.read_all()
         # ASSERT
         for expected_todo, actual_todo in zip_longest(created_ten_or_more_todos_with_random_data, todos):
-            assert expected_todo.id == actual_todo.id
-            assert expected_todo.text == actual_todo.text
-            assert expected_todo.completed == actual_todo.completed
+            assert expected_todo == actual_todo
 
     @pytest.mark.parametrize('limit, offset', [(2, 2)])
     def test_get_todos_with_offset_and_limit(
@@ -46,11 +44,7 @@ class TestGetTodos(BaseTest):
         # ASSERT
         assert len(actual_todos) == limit
         for i in range(limit):
-            assert actual_todos[i].id == created_ten_or_more_todos_with_random_data[i + offset].id
-            assert actual_todos[i].text == created_ten_or_more_todos_with_random_data[i + offset].text
-            assert (
-                actual_todos[i].completed == created_ten_or_more_todos_with_random_data[i + offset].completed
-            )
+            assert actual_todos[i] == created_ten_or_more_todos_with_random_data[i + offset]
 
     @pytest.mark.parametrize('limit, offset', [(2, -1)])
     def test_get_todos_with_invalid_offset_and_limit(
