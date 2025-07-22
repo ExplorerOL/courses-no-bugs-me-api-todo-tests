@@ -6,6 +6,7 @@ from api.search_interface import SearchInterface
 from api.todo_request import ToDoRequest
 from models.creds import CredsUsernamePassword
 from models.todo import ToDo
+from storages.tst_data_storage import TstDataStorage
 
 
 class ValidatedToDoRequest(Request, CRUDInterface, SearchInterface):
@@ -17,6 +18,7 @@ class ValidatedToDoRequest(Request, CRUDInterface, SearchInterface):
         response = self.__todo_request.create(data=data)
         assert response.status_code == HTTPStatus.CREATED
         assert response.text == ''
+        TstDataStorage().add_data(data=data)
         return response.text
 
     def update(self, id: int, data: ToDo) -> None:

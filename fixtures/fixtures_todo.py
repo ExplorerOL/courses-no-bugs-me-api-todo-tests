@@ -4,6 +4,7 @@ import pytest
 
 from api.validated_todo_request import ValidatedToDoRequest
 from models.todo import ToDo
+from storages.tst_data_storage import TstDataStorage
 from support.generators_todo import GeneratorsToDo
 
 
@@ -12,6 +13,16 @@ def delete_all_todos_scope_test(validated_todo_request_admin: ValidatedToDoReque
     todos = validated_todo_request_admin.read_all()
     for todo in todos:
         validated_todo_request_admin.delete(id=todo.id)
+
+
+@pytest.fixture(scope='session', autouse=True)
+def delete_all_todos_after_testrun_scope_session(validated_todo_request_admin: ValidatedToDoRequest):
+    yield
+    for id in TstDataStorage().storage.keys():
+        try:
+            validated_todo_request_admin.delete(id=id)
+        except AssertionError:
+            pass
 
 
 @pytest.fixture(scope='function')
