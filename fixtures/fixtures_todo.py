@@ -41,3 +41,15 @@ def created_ten_or_more_todos_with_random_data(
     for todo in todos:
         validated_todo_request_admin.create(data=todo)
     return todos
+
+
+@pytest.fixture(scope='function')
+def created_todos_with_random_data(
+    delete_all_todos_scope_test,
+    validated_todo_request_admin: ValidatedToDoRequest,
+    request,
+) -> list[ToDo]:
+    quantity = getattr(request, 'param', 10)
+    todos = [GeneratorsToDo.generate_todo_with_random_data() for _ in range(quantity)]
+    [validated_todo_request_admin.create(data=todo) for todo in todos]
+    return todos
