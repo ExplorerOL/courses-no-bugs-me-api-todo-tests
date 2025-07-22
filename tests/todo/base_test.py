@@ -1,4 +1,4 @@
-# from src.requests.request import HTTPSession
+# from api.request import HTTPSession
 
 
 class BaseTest:

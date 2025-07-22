@@ -1,45 +1,25 @@
 import pytest
 
+from api.factory_requests import FactoryRequests
+from api.todo_requester import ToDoRequester
+from api.todo_requester import todo_requester as todo_requester_obj
+from api.validated_todo_request import ValidatedToDoRequest
 from config.config_general import config_general
-from data.creds import auth_user_creds
-from src.models.creds import CredsUsernamePassword
-from src.todo.requests.todo_request import ToDoRequest
-from src.todo.requests.validated_todo_request import ValidatedToDoRequest
+from models.creds import CredsUsernamePassword
 
 
 @pytest.fixture(scope='session')
-def todo_request_anonim() -> ToDoRequest:
-    return ToDoRequest(
+def validated_todo_request_wrong_auth() -> ValidatedToDoRequest:
+    return FactoryRequests.create_todo_request(
         base_url=config_general.base_url,
+        auth_creds=CredsUsernamePassword(
+            username='invalidUser',
+            password='invalidPass',
+        ),
+        is_validated=True,
     )
 
 
 @pytest.fixture(scope='session')
-def todo_request_admin() -> ToDoRequest:
-    return ToDoRequest(
-        base_url=config_general.base_url,
-        auth_creds=auth_user_creds,
-    )
-
-
-@pytest.fixture(scope='session')
-def todo_request_wrong_auth() -> ToDoRequest:
-    return ToDoRequest(
-        base_url=config_general.base_url,
-        auth_creds=CredsUsernamePassword(username='invalidUser', password='invalidPass'),
-    )
-
-
-@pytest.fixture(scope='session')
-def validated_todo_request_anonim() -> ToDoRequest:
-    return ValidatedToDoRequest(
-        base_url=config_general.base_url,
-    )
-
-
-@pytest.fixture(scope='session')
-def validated_todo_request_admin() -> ToDoRequest:
-    return ValidatedToDoRequest(
-        base_url=config_general.base_url,
-        auth_creds=auth_user_creds,
-    )
+def todo_requester() -> ToDoRequester:
+    return todo_requester_obj
