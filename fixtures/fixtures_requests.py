@@ -1,10 +1,10 @@
 import pytest
 
+from api.todo_request import ToDoRequest
+from api.validated_todo_request import ValidatedToDoRequest
 from config.config_general import config_general
 from data.creds import auth_user_creds
-from src.models.creds import CredsUsernamePassword
-from src.todo.requests.todo_request import ToDoRequest
-from src.todo.requests.validated_todo_request import ValidatedToDoRequest
+from models.creds import CredsUsernamePassword
 
 
 @pytest.fixture(scope='session')

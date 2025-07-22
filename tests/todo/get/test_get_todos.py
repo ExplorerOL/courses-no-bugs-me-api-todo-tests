@@ -3,9 +3,9 @@ from itertools import zip_longest
 
 import pytest
 
-from src.models.todo import ToDo
-from src.todo.requests.todo_request import ToDoRequest
-from src.todo.requests.validated_todo_request import ValidatedToDoRequest
+from api.todo_request import ToDoRequest
+from api.validated_todo_request import ValidatedToDoRequest
+from models.todo import ToDo
 from tests.todo.base_test import BaseTest
 
 

@@ -1,7 +1,7 @@
 import random
 
-from src.models.todo import ToDo
-from src.support.generators.generators_string import GeneratorsString
+from models.todo import ToDo
+from support.generators_string import GeneratorsString
 
 
 class GeneratorsToDo:

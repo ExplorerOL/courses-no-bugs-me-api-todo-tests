@@ -1,11 +1,11 @@
 from http import HTTPStatus
 
-from src.models.creds import CredsUsernamePassword
-from src.models.todo import ToDo
-from src.todo.requests.crud_interface import CRUDInterface
-from src.todo.requests.request import Request
-from src.todo.requests.search_interface import SearchInterface
-from src.todo.requests.todo_request import ToDoRequest
+from api.crud_interface import CRUDInterface
+from api.request import Request
+from api.search_interface import SearchInterface
+from api.todo_request import ToDoRequest
+from models.creds import CredsUsernamePassword
+from models.todo import ToDo
 
 
 class ValidatedToDoRequest(Request, CRUDInterface, SearchInterface):

@@ -1,6 +1,6 @@
 import requests
 
-from src.models.creds import CredsUsernamePassword
+from models.creds import CredsUsernamePassword
 
 
 class Request:

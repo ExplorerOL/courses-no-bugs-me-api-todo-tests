@@ -2,11 +2,11 @@ from http import HTTPStatus
 
 import pytest
 
-from src.models.todo import ToDo
-from src.support.generators.generators_string import GeneratorsString
-from src.support.generators.generators_todo import GeneratorsToDo
-from src.todo.requests.todo_request import ToDoRequest
-from src.todo.requests.validated_todo_request import ValidatedToDoRequest
+from api.todo_request import ToDoRequest
+from api.validated_todo_request import ValidatedToDoRequest
+from models.todo import ToDo
+from support.generators_string import GeneratorsString
+from support.generators_todo import GeneratorsToDo
 from tests.todo.base_test import BaseTest
 
 

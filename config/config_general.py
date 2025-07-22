@@ -4,7 +4,7 @@ from typing import Optional
 class ConfigGeneral:
     """Конфигурация тестов. Испоользуется паттерн Singleton"""
 
-    __instance: Optional['ConfigGeneral'] | None = None
+    __instance: Optional['ConfigGeneral'] = None
     __base_url: str = 'http://192.168.0.4:8080'
 
     @staticmethod

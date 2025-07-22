@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import overload
 
-from src.models.todo import ToDo
+from models.todo import ToDo
 
 
 class SearchInterface(ABC):

@@ -3,11 +3,11 @@ from dataclasses import asdict
 
 from requests import Response
 
+from api.crud_interface import CRUDInterface
+from api.request import Request
+from api.search_interface import SearchInterface
 from config.endpoints import Endpoints
-from src.models.todo import ToDo
-from src.todo.requests.crud_interface import CRUDInterface
-from src.todo.requests.request import Request
-from src.todo.requests.search_interface import SearchInterface
+from models.todo import ToDo
 
 
 class ToDoRequest(CRUDInterface, SearchInterface, Request):

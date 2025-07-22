@@ -2,9 +2,9 @@ import random
 
 import pytest
 
-from src.models.todo import ToDo
-from src.support.generators.generators_todo import GeneratorsToDo
-from src.todo.requests.validated_todo_request import ValidatedToDoRequest
+from api.validated_todo_request import ValidatedToDoRequest
+from models.todo import ToDo
+from support.generators_todo import GeneratorsToDo
 
 
 @pytest.fixture(scope='function')
