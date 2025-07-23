@@ -3,7 +3,7 @@ from itertools import zip_longest
 
 import pytest
 
-from api.todo_request import ToDoRequest
+from api.response_validators.api_response_validator import APIResponseValidator
 from api.validated_todo_request import ValidatedToDoRequest
 from models.todo import ToDo
 from support.decorators.decorator_prepare_todo import prepare_todos
@@ -51,15 +51,21 @@ class TestGetTodos(BaseTest):
     @prepare_todos(quantity=20)
     @pytest.mark.parametrize('limit, offset', [(2, -1)])
     def test_get_todos_with_invalid_offset_and_limit(
-        self, todo_request_anonim: ToDoRequest, limit: int, offset: int
+        self, validated_todo_request_anonim: ValidatedToDoRequest, limit: int, offset: int
     ):
         """Передача некорректных значений в offset и limit"""
-        # ACT
-        response = todo_request_anonim.read_all(limit=limit, offset=offset)
-        # ASSERT
-        assert response.status_code == HTTPStatus.BAD_REQUEST
-        assert 'text/plain' in response.headers['Content-Type']
-        assert response.text == 'Invalid query string'
+        # ARRANGE
+        response_validator = APIResponseValidator(
+            expected_staus_code=HTTPStatus.BAD_REQUEST,
+            expected_headers={'Content-Type': 'text/plain; charset=utf-8'},
+            expected_body='Invalid query string',
+        )
+        # ACT & ASSERT
+        validated_todo_request_anonim.read_all(
+            limit=limit,
+            offset=offset,
+            response_validator=response_validator,
+        )
 
     @pytest.mark.parametrize('created_todos_with_random_data', [20], indirect=True)
     def test_get_todos_with_excessive_limit(

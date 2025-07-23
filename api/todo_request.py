@@ -3,9 +3,9 @@ from dataclasses import asdict
 
 from requests import Response
 
-from api.crud_interface import CRUDInterface
+from api.interfaces.crud_interface import CRUDInterface
+from api.interfaces.search_interface import SearchInterface
 from api.request import Request
-from api.search_interface import SearchInterface
 from config.endpoints import Endpoints
 from models.todo import ToDo
 

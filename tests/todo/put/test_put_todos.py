@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 import pytest
 
-from api.todo_request import ToDoRequest
+from api.response_validators.api_response_validator import APIResponseValidator
 from api.validated_todo_request import ValidatedToDoRequest
 from models.todo import ToDo
 from support.generators_todo import GeneratorsToDo
@@ -26,15 +26,18 @@ class TestPutTodos(BaseTest):
         assert len(actual_todos) == 1
         assert actual_todos[0] == updated_todo
 
-    def test_update_non_existing_todo(self, todo_request_anonim: ToDoRequest):
+    def test_update_non_existing_todo(self, validated_todo_request_anonim: ValidatedToDoRequest):
         """Попытка обновления TODO с несуществующим id"""
         # ARRANGE
         updated_todo = GeneratorsToDo.generate_todo_with_random_data()
-        # ACT
-        response = todo_request_anonim.update(id=updated_todo.id, data=updated_todo)
-        # ASSERT
-        assert response.status_code == HTTPStatus.NOT_FOUND
-        assert response.text == ''
+        response_validator = APIResponseValidator(
+            expected_staus_code=HTTPStatus.NOT_FOUND,
+            expected_body='',
+        )
+        # ACT & ASSERT
+        validated_todo_request_anonim.update(
+            id=updated_todo.id, data=updated_todo, response_validator=response_validator
+        )
 
     def test_update_todo_without_changing_data(
         self,
