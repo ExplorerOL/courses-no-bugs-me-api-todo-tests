@@ -7,7 +7,6 @@ from api.response_validators.api_response_validator import APIResponseValidator
 from api.response_validators.api_response_validators_templates import APIResponseValidatorsTemplates
 from api.todo_request import ToDoRequest
 from models.todo import ToDo
-from storages.tst_data_storage import TstDataStorage
 
 
 class ValidatedToDoRequest(CRUDInterface, SearchInterface):
@@ -21,8 +20,6 @@ class ValidatedToDoRequest(CRUDInterface, SearchInterface):
     ) -> str:
         response = self.__todo_request.create(data=data)
         response_validator.validate_response(response=response)
-
-        TstDataStorage().add_data(data=data)
         return response.text
 
     def update(

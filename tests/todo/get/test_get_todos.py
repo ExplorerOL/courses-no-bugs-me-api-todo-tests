@@ -10,7 +10,7 @@ from support.decorators.decorator_prepare_todo import prepare_todos
 from tests.todo.base_test import BaseTest
 
 
-@pytest.mark.usefixtures('delete_all_todos_scope_test')
+@pytest.mark.usefixtures('delete_all_todos_before_test_scope_test')
 class TestGetTodos(BaseTest):
     def test_get_todo_when_database_is_empty(self, todo_requester: ToDoRequester):
         """Получение пустого списка TODO, когда база данных пуста"""

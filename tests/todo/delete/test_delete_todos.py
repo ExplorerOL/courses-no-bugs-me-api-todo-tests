@@ -10,7 +10,7 @@ from models.todo import ToDo
 from tests.todo.base_test import BaseTest
 
 
-@pytest.mark.usefixtures('delete_all_todos_scope_test')
+@pytest.mark.usefixtures('delete_all_todos_before_test_scope_test')
 class TestDeleteTodos(BaseTest):
     def test_delete_existing_todo_with_valid_auth(
         self,

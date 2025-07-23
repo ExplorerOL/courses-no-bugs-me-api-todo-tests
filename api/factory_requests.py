@@ -4,7 +4,7 @@ from api.validated_todo_request import ValidatedToDoRequest
 from models.creds import CredsUsernamePassword
 
 
-class ToDoRequestFactory:
+class FactoryRequests:
     @staticmethod
     def __create_api_session(
         base_url: str,
@@ -24,7 +24,7 @@ class ToDoRequestFactory:
         is_validated: bool = False,
         timeout_ms: int = 10000,
     ) -> ToDoRequest | ValidatedToDoRequest:
-        api_session = ToDoRequestFactory.__create_api_session(
+        api_session = FactoryRequests.__create_api_session(
             auth_creds=auth_creds,
             base_url=base_url,
             timeout_ms=timeout_ms,

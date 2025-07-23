@@ -12,9 +12,7 @@ class ConfigGeneral:
     def __new__(cls):
         if ConfigGeneral.__instance is None:
             ConfigGeneral.__instance = super().__new__(cls)
-            return ConfigGeneral.__instance
-        else:
-            return ConfigGeneral.__instance
+        return ConfigGeneral.__instance
 
     @property
     def base_url(self) -> str:
