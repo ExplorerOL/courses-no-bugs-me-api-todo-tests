@@ -1,6 +1,7 @@
 import pytest
 
 from api.todo_request import ToDoRequest
+from api.todo_requester import ToDoRequester
 from api.validated_todo_request import ValidatedToDoRequest
 from config.config_general import config_general
 from data.user_creds import user_creds
@@ -34,6 +35,14 @@ def validated_todo_request_anonim() -> ValidatedToDoRequest:
 @pytest.fixture(scope='session')
 def validated_todo_request_admin() -> ValidatedToDoRequest:
     return ValidatedToDoRequest(
+        base_url=config_general.base_url,
+        auth_creds=user_creds,
+    )
+
+
+@pytest.fixture(scope='session')
+def todo_requester() -> ToDoRequester:
+    return ToDoRequester(
         base_url=config_general.base_url,
         auth_creds=user_creds,
     )
