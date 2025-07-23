@@ -1,29 +1,18 @@
 from json import JSONDecodeError
 
+from api.api_request import APISession
 from api.interfaces.crud_interface import CRUDInterface
 from api.interfaces.search_interface import SearchInterface
-from api.request import Request
 from api.response_validators.api_response_validator import APIResponseValidator
 from api.response_validators.api_response_validators import APIResponseValidators
 from api.todo_request import ToDoRequest
-from models.creds import CredsUsernamePassword
 from models.todo import ToDo
 from storages.tst_data_storage import TstDataStorage
 
 
-class ValidatedToDoRequest(CRUDInterface, SearchInterface, Request):
-    def __init__(
-        self,
-        base_url: str,
-        auth_creds: CredsUsernamePassword | None = None,
-        timeout_ms: int = 10000,
-    ):
-        super().__init__(base_url=base_url, auth_creds=auth_creds)
-        self.__todo_request = ToDoRequest(
-            base_url=self._base_url,
-            auth_creds=self._auth_creds,
-            timeout_ms=timeout_ms,
-        )
+class ValidatedToDoRequest(CRUDInterface, SearchInterface):
+    def __init__(self, api_session: APISession):
+        self.__todo_request = ToDoRequest(api_session=api_session)
 
     def create(
         self,

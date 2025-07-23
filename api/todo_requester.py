@@ -1,4 +1,5 @@
 from api.todo_request import ToDoRequest
+from api.todo_request_factory import ToDoRequestFactory
 from api.validated_todo_request import ValidatedToDoRequest
 from models.creds import CredsUsernamePassword
 
@@ -10,23 +11,25 @@ class ToDoRequester:
         auth_creds: CredsUsernamePassword | None = None,
         timeout_ms: int = 10000,
     ):
-        self.__todo_request_anonim = ToDoRequest(
+        self.__todo_request_anonim = ToDoRequestFactory.create_todo_request(
             base_url=base_url,
             timeout_ms=timeout_ms,
         )
-        self.__todo_request_admin = ToDoRequest(
+        self.__todo_request_admin = ToDoRequestFactory.create_todo_request(
             base_url=base_url,
             auth_creds=auth_creds,
             timeout_ms=timeout_ms,
         )
-        self.__validated_todo_request_anonim = ValidatedToDoRequest(
+        self.__validated_todo_request_anonim = ToDoRequestFactory.create_todo_request(
             base_url=base_url,
             timeout_ms=timeout_ms,
+            is_validated=True,
         )
-        self.__validated_todo_request_admin = ValidatedToDoRequest(
+        self.__validated_todo_request_admin = ToDoRequestFactory.create_todo_request(
             base_url=base_url,
             auth_creds=auth_creds,
             timeout_ms=timeout_ms,
+            is_validated=True,
         )
 
     @property

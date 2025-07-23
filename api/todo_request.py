@@ -3,36 +3,41 @@ from dataclasses import asdict
 
 from requests import Response
 
+from api.api_request import APISession
 from api.interfaces.crud_interface import CRUDInterface
 from api.interfaces.search_interface import SearchInterface
-from api.request import Request
 from config.endpoints import Endpoints
 from models.todo import ToDo
 
 
-class ToDoRequest(CRUDInterface, SearchInterface, Request):
+class ToDoRequest(CRUDInterface, SearchInterface):
+    def __init__(self, api_session: APISession):
+        self._api_request = api_session
+
     def create(self, data: ToDo) -> Response:
-        return self._http_session.post(
-            self._base_url + Endpoints.todos,
+        return self._api_request.session.post(
+            self._api_request.base_url + Endpoints.todos,
             json=asdict(data),
             headers={'Content-Type': 'application/json'},
         )
 
     def update(self, id, data: ToDo) -> Response:
-        return self._http_session.put(
-            url=self._base_url + Endpoints.todo_by_id.format(todo_id=id),
+        return self._api_request.session.put(
+            url=self._api_request.base_url + Endpoints.todo_by_id.format(todo_id=id),
             data=json.dumps(asdict(data)),
             headers={'Content-Type': 'application/json'},
         )
 
     def delete(self, id) -> Response:
-        return self._http_session.delete(url=self._base_url + Endpoints.todo_by_id.format(todo_id=id))
+        return self._api_request.session.delete(
+            url=self._api_request.base_url + Endpoints.todo_by_id.format(todo_id=id)
+        )
 
     def read_all(self, offset: int | None = None, limit: int | None = None) -> Response:
         if all([offset is not None, limit is not None]):
-            return self._http_session.get(
-                self._base_url + Endpoints.todos,
+            return self._api_request.session.get(
+                self._api_request.base_url + Endpoints.todos,
                 params={'offset': offset, 'limit': limit},
             )
         else:
-            return self._http_session.get(self._base_url + Endpoints.todos)
+            return self._api_request.session.get(self._api_request.base_url + Endpoints.todos)

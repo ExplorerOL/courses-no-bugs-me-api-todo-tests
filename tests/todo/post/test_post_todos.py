@@ -5,8 +5,8 @@ import pytest
 from api.response_validators.api_response_validator import APIResponseValidator
 from api.todo_requester import ToDoRequester
 from models.todo import ToDo
+from support.generator_entities import GeneratorEntities
 from support.generators_string import GeneratorsString
-from support.generators_todo import GeneratorsToDo
 from tests.todo.base_test import BaseTest
 
 
@@ -14,7 +14,7 @@ from tests.todo.base_test import BaseTest
 class TestPostTodos(BaseTest):
     def test_create_todo_with_valid_data(self, todo_requester: ToDoRequester):
         # ARRANGE
-        new_todo = GeneratorsToDo.generate_todo_with_random_data()
+        new_todo = GeneratorEntities.generate_entity_with_random_data(type=ToDo)
         # ACT
         todo_requester.validated_todo_request_anonim.create(data=new_todo)
         # ASSERT
@@ -28,7 +28,7 @@ class TestPostTodos(BaseTest):
         todo_requester: ToDoRequester,
     ):
         # ARRANGE
-        new_todo = GeneratorsToDo.generate_todo_with_random_data()
+        new_todo = GeneratorEntities.generate_entity_with_random_data(type=ToDo)
         new_todo.text = GeneratorsString.generate_random_string(length=255)
         # ACT
         todo_requester.validated_todo_request_anonim.create(data=new_todo)
@@ -44,7 +44,7 @@ class TestPostTodos(BaseTest):
         created_todo_with_random_data: ToDo,
     ):
         # ARRANGE
-        duplicated_todo = GeneratorsToDo.generate_todo_with_random_data()
+        duplicated_todo = GeneratorEntities.generate_entity_with_random_data(type=ToDo)
         duplicated_todo.id = created_todo_with_random_data.id
         response_validator = APIResponseValidator(
             expected_staus_code=HTTPStatus.BAD_REQUEST,
