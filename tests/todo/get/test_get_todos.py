@@ -6,6 +6,7 @@ import pytest
 from api.response_validators.api_response_validator import APIResponseValidator
 from api.todo_requester import ToDoRequester
 from models.todo import ToDo
+from support.decorators.decorator_mobile import mobile
 from support.decorators.decorator_prepare_todo import prepare_todos
 from tests.todo.base_test import BaseTest
 
@@ -48,6 +49,7 @@ class TestGetTodos(BaseTest):
         for i in range(limit):
             assert actual_todos[i] == created_todos_with_random_data[i + offset]
 
+    @mobile
     @prepare_todos(quantity=20)
     @pytest.mark.parametrize('limit, offset', [(2, -1)])
     def test_get_todos_with_invalid_offset_and_limit(

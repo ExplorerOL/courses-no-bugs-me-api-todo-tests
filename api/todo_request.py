@@ -16,28 +16,28 @@ class ToDoRequest(CRUDInterface, SearchInterface):
 
     def create(self, data: ToDo) -> Response:
         return self._api_request.session.post(
-            self._api_request.base_url + Endpoints.todos,
+            self._api_request.base_url + str(Endpoints.TODOS.value),
             json=asdict(data),
             headers={'Content-Type': 'application/json'},
         )
 
     def update(self, id, data: ToDo) -> Response:
         return self._api_request.session.put(
-            url=self._api_request.base_url + Endpoints.todo_by_id.format(todo_id=id),
+            url=self._api_request.base_url + str(Endpoints.TODO_BY_ID.value).format(todo_id=id),
             data=json.dumps(asdict(data)),
             headers={'Content-Type': 'application/json'},
         )
 
     def delete(self, id) -> Response:
         return self._api_request.session.delete(
-            url=self._api_request.base_url + Endpoints.todo_by_id.format(todo_id=id)
+            url=self._api_request.base_url + str(Endpoints.TODO_BY_ID.value).format(todo_id=id)
         )
 
     def read_all(self, offset: int | None = None, limit: int | None = None) -> Response:
         if all([offset is not None, limit is not None]):
             return self._api_request.session.get(
-                self._api_request.base_url + Endpoints.todos,
+                self._api_request.base_url + str(Endpoints.TODOS.value),
                 params={'offset': offset, 'limit': limit},
             )
         else:
-            return self._api_request.session.get(self._api_request.base_url + Endpoints.todos)
+            return self._api_request.session.get(self._api_request.base_url + str(Endpoints.TODOS.value))

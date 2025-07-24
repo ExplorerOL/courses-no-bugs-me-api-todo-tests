@@ -7,6 +7,7 @@ class ConfigGeneral:
     __instance: Optional['ConfigGeneral'] = None
     __base_url: str = 'http://192.168.0.4:8080'
     __timeout_ms: int = 10000
+    __version: str = ''
 
     @staticmethod
     def __new__(cls):
@@ -25,6 +26,12 @@ class ConfigGeneral:
     @property
     def timeout_ms(self) -> int:
         return self.__timeout_ms
+
+    def get_version(self) -> str:
+        return self.__version
+
+    def set_version(self, version: str) -> None:
+        self.__version = version
 
 
 config_general = ConfigGeneral()
