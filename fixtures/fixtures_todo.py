@@ -43,3 +43,10 @@ def created_todos_with_random_data(request) -> list[ToDo]:
     todos = [GeneratorEntities.generate_entity_with_random_data(type=ToDo) for _ in range(quantity)]
     [manager_todo.create_entity(data=todo) for todo in todos]
     return todos
+
+
+@pytest.fixture(scope='function')
+def todo_with_random_data_scope_test() -> ToDo:
+    todo = GeneratorEntities.generate_entity_with_random_data(type=ToDo)
+    manager_todo.add_data(data=todo)
+    return todo
