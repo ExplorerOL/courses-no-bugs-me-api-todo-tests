@@ -2,7 +2,7 @@ from functools import wraps
 
 from managers.manager_todo import manager_todo
 from models.todo import ToDo
-from support.generator_entities import GeneratorEntities
+from support.generators_entity import GeneratorEntities
 
 
 def prepare_todos(quantity: int):

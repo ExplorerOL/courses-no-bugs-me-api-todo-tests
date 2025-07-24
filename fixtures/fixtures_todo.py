@@ -5,7 +5,7 @@ import pytest
 from api.todo_requester import ToDoRequester
 from managers.manager_todo import manager_todo
 from models.todo import ToDo
-from support.generator_entities import GeneratorEntities
+from support.generators_entity import GeneratorEntities
 
 
 @pytest.fixture(scope='function')
