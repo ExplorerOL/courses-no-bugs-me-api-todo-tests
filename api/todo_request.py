@@ -5,12 +5,17 @@ from requests import Response
 
 from api.api_request import APISession
 from api.interfaces.crud_interface import CRUDInterface
-from api.interfaces.search_interface import SearchInterface
 from config.endpoints import Endpoints
 from models.todo import ToDo
+from support.reporters.allure.reporter_base_classes import ClassWithMethodReporting
+from support.reporters.allure.reporter_metaclasses import MetaclassABCMetaWithMethodReporting
 
 
-class ToDoRequest(CRUDInterface, SearchInterface):
+class ToDoRequest(
+    CRUDInterface,
+    ClassWithMethodReporting,
+    metaclass=MetaclassABCMetaWithMethodReporting,
+):
     def __init__(self, api_session: APISession):
         self._api_request = api_session
 

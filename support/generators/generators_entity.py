@@ -3,11 +3,12 @@ from dataclasses import fields
 from typing import Any, Type
 
 from support.generators.generators_string import GeneratorsString
+from support.reporters.allure.reporter_base_classes import ClassWithMethodReporting
 
 # T = TypeVar('T')
 
 
-class GeneratorsEntity:
+class GeneratorsEntity(ClassWithMethodReporting):
     @staticmethod
     def generate_entity_with_random_data(entity_type: Type) -> Any:
         data = {}
