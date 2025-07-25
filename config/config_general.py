@@ -1,5 +1,8 @@
 from typing import Optional
 
+from support.reporters.allure.reporter_allure import ReporterAllure
+from support.reporters.allure.reporter_protocol import ReporterProtocol
+
 
 class ConfigGeneral:
     """Конфигурация тестов. Испоользуется паттерн Singleton"""
@@ -8,6 +11,7 @@ class ConfigGeneral:
     __base_url: str = 'http://192.168.0.4:8080'
     __timeout_ms: int = 10000
     __version: str = ''
+    __reporter = ReporterAllure()
 
     @staticmethod
     def __new__(cls):
@@ -32,6 +36,10 @@ class ConfigGeneral:
 
     def set_version(self, version: str) -> None:
         self.__version = version
+
+    @property
+    def reporter(self) -> ReporterProtocol:
+        return self.__reporter
 
 
 config_general = ConfigGeneral()

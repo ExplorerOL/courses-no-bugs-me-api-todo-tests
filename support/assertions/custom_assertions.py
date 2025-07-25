@@ -2,9 +2,10 @@ from contextlib import nullcontext
 from typing import Any
 
 from support.assertions.assert_soft import assert_soft
+from support.reporters.allure.reporter_base_classes import ClassWithMethodReporting
 
 
-class CustomAssertions:
+class CustomAssertions(ClassWithMethodReporting):
     @staticmethod
     def verify_is_equal(actual_value: Any, expected_value: Any, soft: bool = True, msg: str = '') -> None:
         """Проверка на равенство фактического и ожидаемого значений."""

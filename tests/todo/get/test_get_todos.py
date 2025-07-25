@@ -42,19 +42,22 @@ class TestGetTodos(BaseTest):
         offset: int,
     ):
         """Использование параметров offset и limit для пагинации"""
-        # ACT
-        with self.assert_soft:
-            actual_todos = todo_requester.validated_todo_request_anonim.read_all(limit=limit, offset=offset)
-        # ASSERT
-        self.assertions.verify_is_equal(
-            actual_value=len(actual_todos),
-            expected_value=limit,
-        )
-        for i in range(limit):
+        with self.ACT():
+            with self.assert_soft:
+                actual_todos = todo_requester.validated_todo_request_anonim.read_all(
+                    limit=limit, offset=offset
+                )
+        with self.ASSERT(msg='Проверка количества сообщений'):
             self.assertions.verify_is_equal(
-                actual_value=actual_todos[i],
-                expected_value=created_todos_with_random_data[i + offset],
+                actual_value=len(actual_todos),
+                expected_value=limit,
             )
+        with self.ASSERT(msg='Проверка сообщений на ожидаемый результат'):
+            for i in range(limit):
+                self.assertions.verify_is_equal(
+                    actual_value=actual_todos[i],
+                    expected_value=created_todos_with_random_data[i + offset],
+                )
 
     # Декоратор закомментирован, так как тестовое приложение не поддерживает эдпоинты /mobile
     # @mobile

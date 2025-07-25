@@ -4,17 +4,22 @@ from http import HTTPStatus
 
 from requests import Response
 
-from api.api_request import APISession
+from api.api_request import APIRequest
 from api.interfaces.crud_interface import CRUDInterface
-from api.interfaces.search_interface import SearchInterface
 from config.endpoints import Endpoints
 from models.todo import ToDo
 from support.event_bus.event_bus import event_bus
+from support.reporters.allure.reporter_base_classes import ClassWithMethodReporting
+from support.reporters.allure.reporter_metaclasses import MetaclassABCMetaWithMethodReporting
 
 
-class ToDoRequest(CRUDInterface, SearchInterface):
-    def __init__(self, api_session: APISession):
-        self._api_request = api_session
+class ToDoRequest(
+    CRUDInterface,
+    ClassWithMethodReporting,
+    metaclass=MetaclassABCMetaWithMethodReporting,
+):
+    def __init__(self, api_request: APIRequest):
+        self._api_request = api_request
 
     def create(self, data: ToDo) -> Response:
         response = self._api_request.session.post(

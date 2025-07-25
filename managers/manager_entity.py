@@ -1,11 +1,12 @@
 from typing import TypeVar
 
 from api.interfaces.crud_interface import CRUDInterface
+from support.reporters.allure.reporter_base_classes import ClassWithMethodReporting
 
 T = TypeVar('T')
 
 
-class ManagerEntity:
+class ManagerEntity(ClassWithMethodReporting):
     _storage: dict[T] = {}
     _entity_crud: CRUDInterface
 
@@ -17,21 +18,27 @@ class ManagerEntity:
         return self._storage
 
     def add_data(self, data: T) -> None:
+        """Добавление данных в хранилище"""
         self._storage[data.id] = data
 
     def remove_data(self, id: int) -> None:
+        """Удаление данных из хранилища"""
         self._storage.pop(id, None)
 
     def clean_storage(self) -> None:
+        """Очистка хранилища"""
         self._storage = {}
 
     def create_entity(self, data: T) -> None:
+        """Создание сущности"""
         self._entity_crud.create(data=data)
 
     def delete_entity(self, id: int) -> None:
+        """Удаление сущности"""
         self._entity_crud.delete(id=id)
 
     def delete_all_entities(self) -> None:
+        """Удаление всех сущностей"""
         ids = list(self._storage.keys())
         for id in ids:
             try:

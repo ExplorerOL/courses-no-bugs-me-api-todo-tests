@@ -12,11 +12,6 @@ def prepare_todos(quantity: int):
             todos = [
                 GeneratorsEntity.generate_entity_with_random_data(entity_type=ToDo) for _ in range(quantity)
             ]
-            # validated_todo_request_admin = FactoryRequests.create_todo_request(
-            #     base_url=config_general.base_url,
-            #     auth_creds=user_creds,
-            #     is_validated=True,
-            # )
             [manager_todo.create_entity(data=todo) for todo in todos]
             return func(*args, **kwargs)
 

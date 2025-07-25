@@ -1,17 +1,22 @@
 from json import JSONDecodeError
 
-from api.api_request import APISession
+from api.api_request import APIRequest
 from api.interfaces.crud_interface import CRUDInterface
-from api.interfaces.search_interface import SearchInterface
 from api.response_validators.api_response_validator import APIResponseValidator
 from api.response_validators.api_response_validators_templates import APIResponseValidatorsTemplates
 from api.todo_request import ToDoRequest
 from models.todo import ToDo
+from support.reporters.allure.reporter_base_classes import ClassWithMethodReporting
+from support.reporters.allure.reporter_metaclasses import MetaclassABCMetaWithMethodReporting
 
 
-class ValidatedToDoRequest(CRUDInterface, SearchInterface):
-    def __init__(self, api_session: APISession):
-        self.__todo_request = ToDoRequest(api_session=api_session)
+class ValidatedToDoRequest(
+    CRUDInterface,
+    ClassWithMethodReporting,
+    metaclass=MetaclassABCMetaWithMethodReporting,
+):
+    def __init__(self, api_session: APIRequest):
+        self.__todo_request = ToDoRequest(api_request=api_session)
 
     def create(
         self,
