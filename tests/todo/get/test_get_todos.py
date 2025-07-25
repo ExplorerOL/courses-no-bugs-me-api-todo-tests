@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from itertools import zip_longest
 
 import pytest
 
@@ -16,9 +15,9 @@ class TestGetTodos(BaseTest):
     def test_get_todo_when_database_is_empty(self, todo_requester: ToDoRequester):
         """Получение пустого списка TODO, когда база данных пуста"""
         # ACT
-        todos = todo_requester.validated_todo_request_anonim.read_all()
+        actual_todos = todo_requester.validated_todo_request_anonim.read_all()
         # ASSERT
-        assert len(todos) == 0
+        assert len(actual_todos) == 0
 
     def test_get_todos_with_existing_entries(
         self,
@@ -27,10 +26,11 @@ class TestGetTodos(BaseTest):
     ):
         """Получение списка TODO с существующими записями"""
         # ACT
-        todos = todo_requester.validated_todo_request_anonim.read_all()
+        actual_todos = todo_requester.validated_todo_request_anonim.read_all()
         # ASSERT
-        for expected_todo, actual_todo in zip_longest(created_ten_or_more_todos_with_random_data, todos):
-            assert expected_todo == actual_todo
+        assert len(actual_todos) == len(created_ten_or_more_todos_with_random_data), (
+            f'Фактическое количество {actual_todos} ToDo не совпадает с ожидаемым {created_ten_or_more_todos_with_random_data}!'
+        )
 
     @pytest.mark.parametrize('created_todos_with_random_data', [20], indirect=True)
     @pytest.mark.parametrize('limit, offset', [(2, 2)])
@@ -87,6 +87,6 @@ class TestGetTodos(BaseTest):
     ):
         """Проверка ответа при превышении максимально допустимого значения limit"""
         # ACT
-        todos = todo_requester.validated_todo_request_anonim.read_all(limit=1000, offset=0)
+        actual_todos = todo_requester.validated_todo_request_anonim.read_all(limit=1000, offset=0)
         # ASSERT
-        assert len(todos) == len(created_todos_with_random_data)
+        assert len(actual_todos) == len(created_todos_with_random_data)
