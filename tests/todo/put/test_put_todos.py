@@ -19,7 +19,7 @@ class TestPutTodos(BaseTest):
     ):
         """Обновление существующего TODO корректными данными"""
         # ARRANGE
-        updated_todo = GeneratorsEntity.generate_entity_with_random_data(type=ToDo)
+        updated_todo = GeneratorsEntity.generate_entity_with_random_data(entity_type=ToDo)
         # ACT
         todo_requester.validated_todo_request_anonim.update(
             id=created_todo_with_random_data.id,
@@ -34,7 +34,7 @@ class TestPutTodos(BaseTest):
     def test_update_non_existing_todo(self, todo_requester: ToDoRequester):
         """Попытка обновления TODO с несуществующим id"""
         # ARRANGE
-        updated_todo = GeneratorsEntity.generate_entity_with_random_data(type=ToDo)
+        updated_todo = GeneratorsEntity.generate_entity_with_random_data(entity_type=ToDo)
         response_validator = APIResponseValidator(
             expected_staus_code=HTTPStatus.NOT_FOUND,
             expected_body='',
