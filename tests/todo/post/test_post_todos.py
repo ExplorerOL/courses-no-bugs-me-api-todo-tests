@@ -5,7 +5,7 @@ import pytest
 from api.response_validators.api_response_validator import APIResponseValidator
 from api.todo_requester import ToDoRequester
 from models.todo import ToDo
-from support.generators_string import GeneratorsString
+from support.generators.generators_string import GeneratorsString
 from tests.todo.base_test import BaseTest
 
 
