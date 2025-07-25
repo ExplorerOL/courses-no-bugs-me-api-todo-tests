@@ -1,7 +1,7 @@
 from contextlib import nullcontext
 from typing import Any
 
-from support.assertions import assert_soft
+from support.assertions.assert_soft import assert_soft
 
 
 class CustomAssertions:

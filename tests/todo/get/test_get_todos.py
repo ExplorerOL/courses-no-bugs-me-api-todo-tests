@@ -45,9 +45,15 @@ class TestGetTodos(BaseTest):
         # ACT
         actual_todos = todo_requester.validated_todo_request_anonim.read_all(limit=limit, offset=offset)
         # ASSERT
-        assert len(actual_todos) == limit
+        self.assertions.verify_is_equal(
+            actual_value=len(actual_todos),
+            expected_value=limit,
+        )
         for i in range(limit):
-            assert actual_todos[i] == created_todos_with_random_data[i + offset]
+            self.assertions.verify_is_equal(
+                actual_value=actual_todos[i],
+                expected_value=created_todos_with_random_data[i + offset],
+            )
 
     # @mobile
     @prepare_todos(quantity=20)
