@@ -26,9 +26,9 @@ class ReporterAllure(ReporterProtocol):
     report_title: str = 'ToDo Tests'
     # Информация для добавления в отчет
 
-    def __enter__(self, step_name: str = ''):
+    def __enter__(self, msg: str = ''):
         self.is_current_stage_passed = True
-        self._curr_step_obj = allure.step(f'ASSERT: {step_name}')
+        self._curr_step_obj = allure.step(f'ASSERT: {msg}')
         self._curr_step_obj.__enter__()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -60,7 +60,7 @@ class ReporterAllure(ReporterProtocol):
         return allure.step(f'ACT: {msg}')
 
     def ASSERT(self, msg: str):
-        return self
+        return allure.step(f'ASSERT: {msg}')
 
     def step(self, name: str):
         return allure.step(f'Step: {name}')

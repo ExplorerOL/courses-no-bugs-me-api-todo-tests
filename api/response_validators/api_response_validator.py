@@ -1,7 +1,9 @@
 import requests
 
+from support.reporters.allure.reporter_base_classes import ClassWithMethodReporting
 
-class APIResponseValidator:
+
+class APIResponseValidator(ClassWithMethodReporting):
     def __init__(
         self,
         expected_staus_code: int = None,
