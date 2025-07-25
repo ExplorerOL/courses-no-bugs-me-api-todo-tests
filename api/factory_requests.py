@@ -1,4 +1,4 @@
-from api.api_request import APISession
+from api.api_request import APIRequest
 from api.todo_request import ToDoRequest
 from api.validated_todo_request import ValidatedToDoRequest
 from models.creds import CredsUsernamePassword
@@ -10,8 +10,8 @@ class FactoryRequests:
         base_url: str,
         auth_creds: CredsUsernamePassword | None = None,
         timeout_ms: int = 10000,
-    ) -> APISession:
-        return APISession(
+    ) -> APIRequest:
+        return APIRequest(
             base_url=base_url,
             auth_creds=auth_creds,
             timeout_ms=timeout_ms,
@@ -32,4 +32,4 @@ class FactoryRequests:
         if is_validated:
             return ValidatedToDoRequest(api_session=api_session)
         else:
-            return ToDoRequest(api_session=api_session)
+            return ToDoRequest(api_request=api_session)

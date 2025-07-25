@@ -1,6 +1,6 @@
 from json import JSONDecodeError
 
-from api.api_request import APISession
+from api.api_request import APIRequest
 from api.interfaces.crud_interface import CRUDInterface
 from api.response_validators.api_response_validator import APIResponseValidator
 from api.response_validators.api_response_validators_templates import APIResponseValidatorsTemplates
@@ -15,8 +15,8 @@ class ValidatedToDoRequest(
     ClassWithMethodReporting,
     metaclass=MetaclassABCMetaWithMethodReporting,
 ):
-    def __init__(self, api_session: APISession):
-        self.__todo_request = ToDoRequest(api_session=api_session)
+    def __init__(self, api_session: APIRequest):
+        self.__todo_request = ToDoRequest(api_request=api_session)
 
     def create(
         self,
