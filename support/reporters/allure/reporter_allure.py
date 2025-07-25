@@ -20,11 +20,7 @@ class ASSERTContext:
 
 
 class ReporterAllure(ReporterProtocol):
-    __report_all_methods = False
     __IS_CURRENT_STAGE_PASSED = True
-    # Заголовок отчета
-    report_title: str = 'ToDo Tests'
-    # Информация для добавления в отчет
 
     def __enter__(self, msg: str = ''):
         self.is_current_stage_passed = True
@@ -44,14 +40,6 @@ class ReporterAllure(ReporterProtocol):
     @report_all_methods.setter
     def report_all_methods(self, new_value: bool) -> None:
         self.__report_all_methods = new_value
-
-    # @property
-    # def is_current_stage_passed(self) -> bool:
-    #     return self.__IS_CURRENT_STAGE_PASSED
-
-    # @is_current_stage_passed.setter
-    # def is_current_stage_passed(self, value: bool) -> None:
-    #     self.__IS_CURRENT_STAGE_PASSED = value
 
     def ARRANGE(self, msg: str):
         return allure.step(f'ARRANGE: {msg}')
@@ -83,7 +71,7 @@ class ReporterAllure(ReporterProtocol):
             step_self = args[0]
             first_line_from_docstring = str(func.__doc__).split('\n')[0] if func.__doc__ else ''
             with allure.step(
-                f'Step: {first_line_from_docstring} | {step_self.__module__} -> {step_self.__class__.__name__} -> {func.__name__}'
+                f'Step: {first_line_from_docstring} | {step_self.__module__} -> {step_self.__class__.__name__} -> {func.__name__}: {kwargs}'
             ):
                 return func(*args, **kwargs)
 
@@ -94,7 +82,7 @@ class ReporterAllure(ReporterProtocol):
         def wrapper(*args, **kwargs):
             first_line_from_docstring = str(func.__doc__).split('\n')[0] if func.__doc__ else ''
             with allure.step(
-                f'Step: {first_line_from_docstring} | {func.__module__} -> {func.__class__.__name__} -> {func.__name__}'
+                f'Step: {first_line_from_docstring} | {func.__module__} -> {func.__class__.__name__} -> {func.__name__}: {kwargs}'
             ):
                 return func(*args, **kwargs)
 
