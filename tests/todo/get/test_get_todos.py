@@ -14,9 +14,10 @@ class TestGetTodos(BaseTest):
     def test_get_todo_when_database_is_empty(self, todo_requester: ToDoRequester):
         """Получение пустого списка TODO, когда база данных пуста"""
         # ACT
-        todos = todo_requester.validated_todo_request_anonim.read_all()
+        with self.assert_soft:
+            todos = todo_requester.validated_todo_request_anonim.read_all()
         # ASSERT
-        assert len(todos) == 0
+        self.assertions.verify_is_equal(actual_value=len(todos), expected_value=0)
 
     def test_get_todos_with_existing_entries(
         self,
@@ -25,10 +26,11 @@ class TestGetTodos(BaseTest):
     ):
         """Получение списка TODO с существующими записями"""
         # ACT
-        todos = todo_requester.validated_todo_request_anonim.read_all()
+        with self.assert_soft:
+            todos = todo_requester.validated_todo_request_anonim.read_all()
         # ASSERT
         for expected_todo, actual_todo in zip_longest(created_ten_or_more_todos_with_random_data, todos):
-            assert expected_todo == actual_todo
+            self.assertions.verify_is_equal(actual_value=actual_todo, expected_value=expected_todo)
 
     @pytest.mark.parametrize('created_todos_with_random_data', [20], indirect=True)
     @pytest.mark.parametrize('limit, offset', [(2, 2)])
@@ -41,11 +43,18 @@ class TestGetTodos(BaseTest):
     ):
         """Использование параметров offset и limit для пагинации"""
         # ACT
-        actual_todos = todo_requester.validated_todo_request_anonim.read_all(limit=limit, offset=offset)
+        with self.assert_soft:
+            actual_todos = todo_requester.validated_todo_request_anonim.read_all(limit=limit, offset=offset)
         # ASSERT
-        assert len(actual_todos) == limit
+        self.assertions.verify_is_equal(
+            actual_value=len(actual_todos),
+            expected_value=limit,
+        )
         for i in range(limit):
-            assert actual_todos[i] == created_todos_with_random_data[i + offset]
+            self.assertions.verify_is_equal(
+                actual_value=actual_todos[i],
+                expected_value=created_todos_with_random_data[i + offset],
+            )
 
     # Декоратор закомментирован, так как тестовое приложение не поддерживает эдпоинты /mobile
     # @mobile
@@ -59,11 +68,12 @@ class TestGetTodos(BaseTest):
     ):
         """Передача некорректных значений в offset и limit"""
         # ACT & ASSERT
-        todo_requester.validated_todo_request_anonim.read_all(
-            limit=limit,
-            offset=offset,
-            response_validator=APIResponseValidatorsTemplates.status_bad_req_body_invalid_query_string,
-        )
+        with self.assert_soft:
+            todo_requester.validated_todo_request_anonim.read_all(
+                limit=limit,
+                offset=offset,
+                response_validator=APIResponseValidatorsTemplates.status_bad_req_body_invalid_query_string,
+            )
 
     @pytest.mark.parametrize('created_todos_with_random_data', [20], indirect=True)
     def test_get_todos_with_excessive_limit(
@@ -73,6 +83,10 @@ class TestGetTodos(BaseTest):
     ):
         """Проверка ответа при превышении максимально допустимого значения limit"""
         # ACT
-        todos = todo_requester.validated_todo_request_anonim.read_all(limit=1000, offset=0)
+        with self.assert_soft:
+            todos = todo_requester.validated_todo_request_anonim.read_all(limit=1000, offset=0)
         # ASSERT
-        assert len(todos) == len(created_todos_with_random_data)
+        self.assertions.verify_is_equal(
+            actual_value=len(todos),
+            expected_value=len(created_todos_with_random_data),
+        )

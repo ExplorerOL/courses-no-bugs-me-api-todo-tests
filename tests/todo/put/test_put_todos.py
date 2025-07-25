@@ -18,25 +18,27 @@ class TestPutTodos(BaseTest):
         # ARRANGE
         updated_todo = GeneratorsEntity.generate_entity_with_random_data(entity_type=ToDo)
         # ACT
-        todo_requester.validated_todo_request_anonim.update(
-            id=created_todo_with_random_data.id,
-            data=updated_todo,
-        )
+        with self.assert_soft:
+            todo_requester.validated_todo_request_anonim.update(
+                id=created_todo_with_random_data.id,
+                data=updated_todo,
+            )
         # ASSERT
         actual_todos = todo_requester.validated_todo_request_anonim.read_all()
-        assert len(actual_todos) == 1
-        assert actual_todos[0] == updated_todo
+        self.assertions.verify_is_equal(actual_value=len(actual_todos), expected_value=1)
+        self.assertions.verify_is_equal(actual_value=actual_todos[0], expected_value=updated_todo)
 
     def test_update_non_existing_todo(self, todo_requester: ToDoRequester):
         """Попытка обновления TODO с несуществующим id"""
         # ARRANGE
         updated_todo = GeneratorsEntity.generate_entity_with_random_data(entity_type=ToDo)
         # ACT & ASSERT
-        todo_requester.validated_todo_request_anonim.update(
-            id=updated_todo.id,
-            data=updated_todo,
-            response_validator=APIResponseValidatorsTemplates.status_not_found_body_empty,
-        )
+        with self.assert_soft:
+            todo_requester.validated_todo_request_anonim.update(
+                id=updated_todo.id,
+                data=updated_todo,
+                response_validator=APIResponseValidatorsTemplates.status_not_found_body_empty,
+            )
 
     def test_update_todo_without_changing_data(
         self,
@@ -45,11 +47,15 @@ class TestPutTodos(BaseTest):
     ):
         """Обновление TODO без изменения данных"""
         # ACT
-        todo_requester.validated_todo_request_anonim.update(
-            id=created_todo_with_random_data.id,
-            data=created_todo_with_random_data,
-        )
+        with self.assert_soft:
+            todo_requester.validated_todo_request_anonim.update(
+                id=created_todo_with_random_data.id,
+                data=created_todo_with_random_data,
+            )
         # ASSERT
         actual_todos = todo_requester.validated_todo_request_anonim.read_all()
-        assert len(actual_todos) == 1
-        assert actual_todos[0] == created_todo_with_random_data
+        self.assertions.verify_is_equal(actual_value=len(actual_todos), expected_value=1)
+        self.assertions.verify_is_equal(
+            actual_value=actual_todos[0],
+            expected_value=created_todo_with_random_data,
+        )

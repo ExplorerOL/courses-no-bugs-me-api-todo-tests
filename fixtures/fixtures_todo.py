@@ -14,7 +14,10 @@ def delete_all_todos_before_test_scope_test() -> None:
 
 
 @pytest.fixture(scope='session', autouse=True)
-def delete_all_todos_after_testrun_scope_session(todo_requester: ToDoRequester):
+def delete_all_todos_before_and_after_testrun_scope_session(todo_requester: ToDoRequester):
+    todos = todo_requester.validated_todo_request_admin.read_all()
+    for todo in todos:
+        todo_requester.validated_todo_request_admin.delete(id=todo.id)
     yield
     todos = todo_requester.validated_todo_request_admin.read_all()
     for todo in todos:
