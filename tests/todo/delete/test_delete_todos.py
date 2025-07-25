@@ -22,10 +22,7 @@ class TestDeleteTodos(BaseTest):
         todo_requester.validated_todo_request_admin.delete(id=created_todo_with_random_data.id)
         # ASSERT
         actual_todos = todo_requester.validated_todo_request_admin.read_all()
-        found_todo = list(
-            filter(lambda todo_item: todo_item.id == created_todo_with_random_data.id, actual_todos)
-        )
-        assert not found_todo, 'Удаленная задача все еще присутствует в списке TODO'
+        assert len(actual_todos) == 0, 'Удаленная задача все еще присутствует в списке TODO!'
 
     def test_delete_todo_without_auth_header(
         self,
@@ -42,13 +39,7 @@ class TestDeleteTodos(BaseTest):
         )
         # ASSERT
         actual_todos = todo_requester.validated_todo_request_anonim.read_all()
-        found_todo = list(
-            filter(
-                lambda todo_item: todo_item.id == created_todo_with_random_data.id,
-                actual_todos,
-            )
-        )
-        assert found_todo, 'Задача отсутствует в списке TODO, хотя не должна была быть удалена'
+        assert len(actual_todos) == 1, 'Удаленная задача все еще присутствует в списке TODO!'
 
     def test_delete_todo_with_invalid_auth(
         self,
@@ -66,13 +57,7 @@ class TestDeleteTodos(BaseTest):
         )
         # ASSERT
         actual_todos = todo_requester.validated_todo_request_anonim.read_all()
-        found_todo = list(
-            filter(
-                lambda todo_item: todo_item.id == created_todo_with_random_data.id,
-                actual_todos,
-            )
-        )
-        assert found_todo, 'Задача отсутствует в списке TODO, хотя не должна была быть удалена'
+        assert len(actual_todos) == 1, 'Задача отсутствует в списке TODO, хотя не должна была быть удалена!'
 
     # TODO: обсудить, какой из вариантов лучше использовать
     def test_delete_non_existent_todo_var1(self, todo_requester: ToDoRequester):
