@@ -1,8 +1,6 @@
-from http import HTTPStatus
-
 import pytest
 
-from api.response_validators.api_response_validator import APIResponseValidator
+from api.response_validators.api_response_validators_templates import APIResponseValidatorsTemplates
 from api.todo_requester import ToDoRequester
 from managers.manager_todo import manager_todo
 from models.todo import ToDo
@@ -35,15 +33,11 @@ class TestPutTodos(BaseTest):
         """Попытка обновления TODO с несуществующим id"""
         # ARRANGE
         updated_todo = GeneratorEntities.generate_entity_with_random_data(type=ToDo)
-        response_validator = APIResponseValidator(
-            expected_staus_code=HTTPStatus.NOT_FOUND,
-            expected_body='',
-        )
         # ACT & ASSERT
         todo_requester.validated_todo_request_anonim.update(
             id=updated_todo.id,
             data=updated_todo,
-            response_validator=response_validator,
+            response_validator=APIResponseValidatorsTemplates.status_not_found_body_empty,
         )
 
     def test_update_todo_without_changing_data(

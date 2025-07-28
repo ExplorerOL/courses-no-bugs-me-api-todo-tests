@@ -1,8 +1,6 @@
-from http import HTTPStatus
-
 import pytest
 
-from api.response_validators.api_response_validator import APIResponseValidator
+from api.response_validators.api_response_validators_templates import APIResponseValidatorsTemplates
 from api.todo_requester import ToDoRequester
 from models.todo import ToDo
 from support.generators_string import GeneratorsString
@@ -52,12 +50,8 @@ class TestPostTodos(BaseTest):
         # ARRANGE
         duplicated_todo = todo_with_random_data_scope_test
         duplicated_todo.id = created_todo_with_random_data.id
-        response_validator = APIResponseValidator(
-            expected_staus_code=HTTPStatus.BAD_REQUEST,
-            expected_body='',
-        )
         # ACT & ASSERT
         todo_requester.validated_todo_request_anonim.create(
             data=duplicated_todo,
-            response_validator=response_validator,
+            response_validator=APIResponseValidatorsTemplates.status_bad_req_body_empty,
         )

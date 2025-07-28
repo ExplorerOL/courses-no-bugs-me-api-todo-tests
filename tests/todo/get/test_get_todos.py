@@ -1,9 +1,8 @@
-from http import HTTPStatus
 from itertools import zip_longest
 
 import pytest
 
-from api.response_validators.api_response_validator import APIResponseValidator
+from api.response_validators.api_response_validators_templates import APIResponseValidatorsTemplates
 from api.todo_requester import ToDoRequester
 from models.todo import ToDo
 from support.decorators.decorator_mobile import mobile
@@ -59,17 +58,11 @@ class TestGetTodos(BaseTest):
         offset: int,
     ):
         """Передача некорректных значений в offset и limit"""
-        # ARRANGE
-        response_validator = APIResponseValidator(
-            expected_staus_code=HTTPStatus.BAD_REQUEST,
-            expected_headers={'Content-Type': 'text/plain; charset=utf-8'},
-            expected_body='Invalid query string',
-        )
         # ACT & ASSERT
         todo_requester.validated_todo_request_anonim.read_all(
             limit=limit,
             offset=offset,
-            response_validator=response_validator,
+            response_validator=APIResponseValidatorsTemplates.status_bad_req_body_invalid_query_string,
         )
 
     @pytest.mark.parametrize('created_todos_with_random_data', [20], indirect=True)
