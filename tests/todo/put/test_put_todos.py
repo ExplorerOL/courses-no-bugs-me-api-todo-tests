@@ -2,7 +2,6 @@ import pytest
 
 from api.response_validators.api_response_validators_templates import APIResponseValidatorsTemplates
 from api.todo_requester import ToDoRequester
-from managers.manager_todo import manager_todo
 from models.todo import ToDo
 from support.generators_entity import GeneratorEntities
 from tests.todo.base_test import BaseTest
@@ -23,7 +22,6 @@ class TestPutTodos(BaseTest):
             id=created_todo_with_random_data.id,
             data=updated_todo,
         )
-        manager_todo.add_data(data=updated_todo)
         # ASSERT
         actual_todos = todo_requester.validated_todo_request_anonim.read_all()
         assert len(actual_todos) == 1

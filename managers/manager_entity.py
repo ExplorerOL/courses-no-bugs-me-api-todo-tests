@@ -20,21 +20,20 @@ class ManagerEntity:
         self._storage[data.id] = data
 
     def remove_data(self, id: int) -> None:
-        self._storage.pop[id]
+        self._storage.pop(id, None)
 
     def clean_storage(self) -> None:
         self._storage = {}
 
     def create_entity(self, data: T) -> None:
         self._entity_crud.create(data=data)
-        self.add_data(data=data)
 
     def delete_entity(self, id: int) -> None:
         self._entity_crud.delete(id=id)
-        self.remove_data(id=id)
 
     def delete_all_entities(self) -> None:
-        for id in self._storage.keys():
+        ids = list(self._storage.keys())
+        for id in ids:
             try:
                 self._entity_crud.delete(id=id)
             except AssertionError:
