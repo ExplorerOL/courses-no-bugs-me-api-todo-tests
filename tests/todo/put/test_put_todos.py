@@ -25,20 +25,27 @@ class TestPutTodos(BaseTest):
                 )
         with self.ASSERT():
             actual_todos = todo_requester.validated_todo_request_anonim.read_all()
-            self.assertions.verify_is_equal(actual_value=len(actual_todos), expected_value=1)
-            self.assertions.verify_is_equal(actual_value=actual_todos[0], expected_value=updated_todo)
+            self.assertions.verify_is_equal(
+                actual_value=len(actual_todos),
+                expected_value=1,
+                msg='Проверка количества TODO',
+            )
+            self.assertions.verify_is_equal(
+                actual_value=actual_todos[0],
+                expected_value=updated_todo,
+                msg='Проверка данных TODO',
+            )
 
     def test_update_non_existing_todo(self, todo_requester: ToDoRequester):
         """Попытка обновления TODO с несуществующим id"""
         with self.ARRANGE():
             updated_todo = GeneratorsEntity.generate_entity_with_random_data(entity_type=ToDo)
         with self.ACT():
-            with self.assert_soft:
-                todo_requester.validated_todo_request_anonim.update(
-                    id=updated_todo.id,
-                    data=updated_todo,
-                    response_validator=APIResponseValidatorsTemplates.status_not_found_body_empty,
-                )
+            todo_requester.validated_todo_request_anonim.update(
+                id=updated_todo.id,
+                data=updated_todo,
+                response_validator=APIResponseValidatorsTemplates.status_not_found_body_empty,
+            )
 
     def test_update_todo_without_changing_data(
         self,
@@ -54,8 +61,13 @@ class TestPutTodos(BaseTest):
                 )
         with self.ASSERT():
             actual_todos = todo_requester.validated_todo_request_anonim.read_all()
-            self.assertions.verify_is_equal(actual_value=len(actual_todos), expected_value=1)
+            self.assertions.verify_is_equal(
+                actual_value=len(actual_todos),
+                expected_value=1,
+                msg='Проверка количества сообщений',
+            )
             self.assertions.verify_is_equal(
                 actual_value=actual_todos[0],
                 expected_value=created_todo_with_random_data,
+                msg='Проверка данных сообщения',
             )

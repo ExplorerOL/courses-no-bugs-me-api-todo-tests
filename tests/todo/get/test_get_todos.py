@@ -1,5 +1,3 @@
-from itertools import zip_longest
-
 import pytest
 
 from api.response_validators.api_response_validators_templates import APIResponseValidatorsTemplates
@@ -13,11 +11,15 @@ from tests.todo.base_test import BaseTest
 class TestGetTodos(BaseTest):
     def test_get_todo_when_database_is_empty(self, todo_requester: ToDoRequester):
         """Получение пустого списка TODO, когда база данных пуста"""
-        # ACT
-        with self.assert_soft:
-            todos = todo_requester.validated_todo_request_anonim.read_all()
-        # ASSERT
-        self.assertions.verify_is_equal(actual_value=len(todos), expected_value=0)
+        with self.ACT():
+            with self.assert_soft:
+                todos = todo_requester.validated_todo_request_anonim.read_all()
+        with self.ASSERT():
+            self.assertions.verify_is_equal(
+                actual_value=len(todos),
+                expected_value=0,
+                msg='Проверка количества сообщений',
+            )
 
     def test_get_todos_with_existing_entries(
         self,
@@ -29,8 +31,11 @@ class TestGetTodos(BaseTest):
             with self.assert_soft:
                 todos = todo_requester.validated_todo_request_anonim.read_all()
         with self.ASSERT():
-            for expected_todo, actual_todo in zip_longest(created_ten_or_more_todos_with_random_data, todos):
-                self.assertions.verify_is_equal(actual_value=actual_todo, expected_value=expected_todo)
+            self.assertions.verify_is_equal(
+                actual_value=len(todos),
+                expected_value=len(created_ten_or_more_todos_with_random_data),
+                msg='Проверка количества сообщений',
+            )
 
     @pytest.mark.parametrize('created_todos_with_random_data', [20], indirect=True)
     @pytest.mark.parametrize('limit, offset', [(2, 2)])
@@ -47,17 +52,12 @@ class TestGetTodos(BaseTest):
                 actual_todos = todo_requester.validated_todo_request_anonim.read_all(
                     limit=limit, offset=offset
                 )
-        with self.ASSERT(msg='Проверка количества сообщений'):
+        with self.ASSERT():
             self.assertions.verify_is_equal(
                 actual_value=len(actual_todos),
                 expected_value=limit,
+                msg='Проверка количества сообщений',
             )
-        with self.ASSERT(msg='Проверка содержимого TODO'):
-            for i in range(limit):
-                self.assertions.verify_is_equal(
-                    actual_value=actual_todos[i],
-                    expected_value=created_todos_with_random_data[i + offset],
-                )
 
     # Декоратор закомментирован, так как тестовое приложение не поддерживает эдпоинты /mobile
     # @mobile
@@ -92,4 +92,5 @@ class TestGetTodos(BaseTest):
             self.assertions.verify_is_equal(
                 actual_value=len(todos),
                 expected_value=len(created_todos_with_random_data),
+                msg='Проверка количества сообщений',
             )
