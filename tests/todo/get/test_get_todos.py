@@ -25,12 +25,12 @@ class TestGetTodos(BaseTest):
         created_ten_or_more_todos_with_random_data: list[ToDo],
     ):
         """Получение списка TODO с существующими записями"""
-        # ACT
-        with self.assert_soft:
-            todos = todo_requester.validated_todo_request_anonim.read_all()
-        # ASSERT
-        for expected_todo, actual_todo in zip_longest(created_ten_or_more_todos_with_random_data, todos):
-            self.assertions.verify_is_equal(actual_value=actual_todo, expected_value=expected_todo)
+        with self.ACT():
+            with self.assert_soft:
+                todos = todo_requester.validated_todo_request_anonim.read_all()
+        with self.ASSERT():
+            for expected_todo, actual_todo in zip_longest(created_ten_or_more_todos_with_random_data, todos):
+                self.assertions.verify_is_equal(actual_value=actual_todo, expected_value=expected_todo)
 
     @pytest.mark.parametrize('created_todos_with_random_data', [20], indirect=True)
     @pytest.mark.parametrize('limit, offset', [(2, 2)])
@@ -52,7 +52,7 @@ class TestGetTodos(BaseTest):
                 actual_value=len(actual_todos),
                 expected_value=limit,
             )
-        with self.ASSERT(msg='Проверка сообщений на ожидаемый результат'):
+        with self.ASSERT(msg='Проверка содержимого TODO'):
             for i in range(limit):
                 self.assertions.verify_is_equal(
                     actual_value=actual_todos[i],
@@ -70,13 +70,13 @@ class TestGetTodos(BaseTest):
         offset: int,
     ):
         """Передача некорректных значений в offset и limit"""
-        # ACT & ASSERT
-        with self.assert_soft:
-            todo_requester.validated_todo_request_anonim.read_all(
-                limit=limit,
-                offset=offset,
-                response_validator=APIResponseValidatorsTemplates.status_bad_req_body_invalid_query_string,
-            )
+        with self.ACT():
+            with self.assert_soft:
+                todo_requester.validated_todo_request_anonim.read_all(
+                    limit=limit,
+                    offset=offset,
+                    response_validator=APIResponseValidatorsTemplates.status_bad_req_body_invalid_query_string,
+                )
 
     @pytest.mark.parametrize('created_todos_with_random_data', [20], indirect=True)
     def test_get_todos_with_excessive_limit(
@@ -85,11 +85,11 @@ class TestGetTodos(BaseTest):
         created_todos_with_random_data: list[ToDo],
     ):
         """Проверка ответа при превышении максимально допустимого значения limit"""
-        # ACT
-        with self.assert_soft:
-            todos = todo_requester.validated_todo_request_anonim.read_all(limit=1000, offset=0)
-        # ASSERT
-        self.assertions.verify_is_equal(
-            actual_value=len(todos),
-            expected_value=len(created_todos_with_random_data),
-        )
+        with self.ACT():
+            with self.assert_soft:
+                todos = todo_requester.validated_todo_request_anonim.read_all(limit=1000, offset=0)
+        with self.ASSERT():
+            self.assertions.verify_is_equal(
+                actual_value=len(todos),
+                expected_value=len(created_todos_with_random_data),
+            )

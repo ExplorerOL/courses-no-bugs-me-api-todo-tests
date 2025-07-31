@@ -23,6 +23,7 @@ class ValidatedToDoRequest(
         data: ToDo,
         response_validator: APIResponseValidator = APIResponseValidatorsTemplates.status_created_body_empty,
     ) -> str:
+        """Отправка запроса на создание с валидацией ответа"""
         response = self.__todo_request.create(data=data)
         response_validator.validate_response(response=response)
         return response.text
@@ -33,6 +34,7 @@ class ValidatedToDoRequest(
         data: ToDo,
         response_validator: APIResponseValidator = APIResponseValidatorsTemplates.status_ok_body_empty,
     ) -> None:
+        """Отправка запроса на обновление с валидацией ответа"""
         response = self.__todo_request.update(id=id, data=data)
         response_validator.validate_response(response=response)
 
@@ -41,6 +43,7 @@ class ValidatedToDoRequest(
         id: int,
         response_validator: APIResponseValidator = APIResponseValidatorsTemplates.status_no_content_body_empty,
     ) -> str:
+        """Отправка запроса на удаление с валидацией ответа"""
         response = self.__todo_request.delete(id=id)
         response_validator.validate_response(response=response)
         return response.text
@@ -51,6 +54,7 @@ class ValidatedToDoRequest(
         limit: int | None = None,
         response_validator: APIResponseValidator = APIResponseValidatorsTemplates.status_ok_header_json,
     ) -> list[ToDo] | None:
+        """Отправка запроса на чтение всех сущностей с валидацией ответа"""
         if all([offset is not None, limit is not None]):
             response = self.__todo_request.read_all(limit=limit, offset=offset)
         else:

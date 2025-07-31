@@ -8,7 +8,6 @@ class BaseTest:
     assertions = CustomAssertions
 
     def __enter__(self) -> None:
-        # with ReporterAllureScada.step(name=f'ACT:'):
         pass
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
@@ -19,8 +18,6 @@ class BaseTest:
 
     def ACT(self, msg: str = ''):
         return config_general.reporter.ACT(msg=msg)
-        # with reporter.step(name=f'ACT: {msg}'):
-        # return self
 
     def ASSERT(self, msg: str = ''):
         return config_general.reporter.ASSERT(msg=msg)
