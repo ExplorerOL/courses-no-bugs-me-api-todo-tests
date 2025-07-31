@@ -18,8 +18,10 @@ class TestDeleteTodos(BaseTest):
     ):
         """Успешное удаление существующего TODO с корректной авторизацией"""
         with self.ACT():
-            with self.assert_soft:
-                todo_requester.validated_todo_request_admin.delete(id=created_todo_with_random_data.id)
+            todo_requester.validated_todo_request_admin.delete(
+                id=created_todo_with_random_data.id,
+                soft_validation=True,
+            )
         with self.ASSERT():
             actual_todos = todo_requester.validated_todo_request_admin.read_all()
             found_todo = list(
@@ -35,11 +37,11 @@ class TestDeleteTodos(BaseTest):
     ):
         """Попытка удаления TODO без заголовка Authorization"""
         with self.ACT():
-            with self.assert_soft:
-                todo_requester.validated_todo_request_anonim.delete(
-                    id=created_todo_with_random_data.id,
-                    response_validator=APIResponseValidatorsTemplates.status_unauthorized,
-                )
+            todo_requester.validated_todo_request_anonim.delete(
+                id=created_todo_with_random_data.id,
+                response_validator=APIResponseValidatorsTemplates.status_unauthorized,
+                soft_validation=True,
+            )
         with self.ASSERT():
             actual_todos = todo_requester.validated_todo_request_anonim.read_all()
             found_todo = list(
@@ -59,11 +61,11 @@ class TestDeleteTodos(BaseTest):
     ):
         """Попытка удаления TODO с некорректными учетными данными"""
         with self.ACT():
-            with self.assert_soft:
-                validated_todo_request_wrong_auth.delete(
-                    id=created_todo_with_random_data.id,
-                    response_validator=APIResponseValidatorsTemplates.status_unauthorized,
-                )
+            validated_todo_request_wrong_auth.delete(
+                id=created_todo_with_random_data.id,
+                response_validator=APIResponseValidatorsTemplates.status_unauthorized,
+                soft_validation=True,
+            )
         with self.ASSERT():
             actual_todos = todo_requester.validated_todo_request_anonim.read_all()
             found_todo = list(
@@ -78,11 +80,11 @@ class TestDeleteTodos(BaseTest):
     def test_delete_non_existent_todo(self, todo_requester: ToDoRequester):
         """Удаление TODO с несуществующим id"""
         with self.ACT():
-            with self.assert_soft:
-                todo_requester.validated_todo_request_admin.delete(
-                    id=random.randint(1, 1000),
-                    response_validator=APIResponseValidatorsTemplates.status_not_found,
-                )
+            todo_requester.validated_todo_request_admin.delete(
+                id=random.randint(1, 1000),
+                response_validator=APIResponseValidatorsTemplates.status_not_found,
+                soft_validation=True,
+            )
         with self.ASSERT():
             actual_todos = todo_requester.validated_todo_request_admin.read_all()
             self.assertions.verify_is_equal(actual_value=len(actual_todos), expected_value=0)

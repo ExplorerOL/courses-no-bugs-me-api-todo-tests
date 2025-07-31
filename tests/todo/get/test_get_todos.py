@@ -12,8 +12,7 @@ class TestGetTodos(BaseTest):
     def test_get_todo_when_database_is_empty(self, todo_requester: ToDoRequester):
         """Получение пустого списка TODO, когда база данных пуста"""
         with self.ACT():
-            with self.assert_soft:
-                todos = todo_requester.validated_todo_request_anonim.read_all()
+            todos = todo_requester.validated_todo_request_anonim.read_all(soft_validation=True)
         with self.ASSERT():
             self.assertions.verify_is_equal(
                 actual_value=len(todos),
@@ -28,8 +27,7 @@ class TestGetTodos(BaseTest):
     ):
         """Получение списка TODO с существующими записями"""
         with self.ACT():
-            with self.assert_soft:
-                todos = todo_requester.validated_todo_request_anonim.read_all()
+            todos = todo_requester.validated_todo_request_anonim.read_all(soft_validation=True)
         with self.ASSERT():
             self.assertions.verify_is_equal(
                 actual_value=len(todos),
@@ -48,10 +46,11 @@ class TestGetTodos(BaseTest):
     ):
         """Использование параметров offset и limit для пагинации"""
         with self.ACT():
-            with self.assert_soft:
-                actual_todos = todo_requester.validated_todo_request_anonim.read_all(
-                    limit=limit, offset=offset
-                )
+            actual_todos = todo_requester.validated_todo_request_anonim.read_all(
+                limit=limit,
+                offset=offset,
+                soft_validation=True,
+            )
         with self.ASSERT():
             self.assertions.verify_is_equal(
                 actual_value=len(actual_todos),
@@ -71,12 +70,12 @@ class TestGetTodos(BaseTest):
     ):
         """Передача некорректных значений в offset и limit"""
         with self.ACT():
-            with self.assert_soft:
-                todo_requester.validated_todo_request_anonim.read_all(
-                    limit=limit,
-                    offset=offset,
-                    response_validator=APIResponseValidatorsTemplates.status_bad_req_body_invalid_query_string,
-                )
+            todo_requester.validated_todo_request_anonim.read_all(
+                limit=limit,
+                offset=offset,
+                response_validator=APIResponseValidatorsTemplates.status_bad_req_body_invalid_query_string,
+                soft_validation=True,
+            )
 
     @pytest.mark.parametrize('created_todos_with_random_data', [20], indirect=True)
     def test_get_todos_with_excessive_limit(
@@ -86,8 +85,11 @@ class TestGetTodos(BaseTest):
     ):
         """Проверка ответа при превышении максимально допустимого значения limit"""
         with self.ACT():
-            with self.assert_soft:
-                todos = todo_requester.validated_todo_request_anonim.read_all(limit=1000, offset=0)
+            todos = todo_requester.validated_todo_request_anonim.read_all(
+                limit=1000,
+                offset=0,
+                soft_validation=True,
+            )
         with self.ASSERT():
             self.assertions.verify_is_equal(
                 actual_value=len(todos),

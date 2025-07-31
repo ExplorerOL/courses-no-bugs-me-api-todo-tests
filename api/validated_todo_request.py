@@ -22,10 +22,11 @@ class ValidatedToDoRequest(
         self,
         data: ToDo,
         response_validator: APIResponseValidator = APIResponseValidatorsTemplates.status_created_body_empty,
+        soft_validation: bool = False,
     ) -> str:
         """Отправка запроса на создание с валидацией ответа"""
         response = self.__todo_request.create(data=data)
-        response_validator.validate_response(response=response)
+        response_validator.validate_response(response=response, soft=soft_validation)
         return response.text
 
     def update(
@@ -33,19 +34,21 @@ class ValidatedToDoRequest(
         id: int,
         data: ToDo,
         response_validator: APIResponseValidator = APIResponseValidatorsTemplates.status_ok_body_empty,
+        soft_validation: bool = False,
     ) -> None:
         """Отправка запроса на обновление с валидацией ответа"""
         response = self.__todo_request.update(id=id, data=data)
-        response_validator.validate_response(response=response)
+        response_validator.validate_response(response=response, soft=soft_validation)
 
     def delete(
         self,
         id: int,
         response_validator: APIResponseValidator = APIResponseValidatorsTemplates.status_no_content_body_empty,
+        soft_validation: bool = False,
     ) -> str:
         """Отправка запроса на удаление с валидацией ответа"""
         response = self.__todo_request.delete(id=id)
-        response_validator.validate_response(response=response)
+        response_validator.validate_response(response=response, soft=soft_validation)
         return response.text
 
     def read_all(
@@ -53,6 +56,7 @@ class ValidatedToDoRequest(
         offset: int | None = None,
         limit: int | None = None,
         response_validator: APIResponseValidator = APIResponseValidatorsTemplates.status_ok_header_json,
+        soft_validation: bool = False,
     ) -> list[ToDo] | None:
         """Отправка запроса на чтение всех сущностей с валидацией ответа"""
         if all([offset is not None, limit is not None]):
@@ -60,7 +64,7 @@ class ValidatedToDoRequest(
         else:
             response = self.__todo_request.read_all()
 
-        response_validator.validate_response(response=response)
+        response_validator.validate_response(response=response, soft=soft_validation)
         try:
             body_json = response.json()
             return [ToDo(**todo) for todo in body_json]

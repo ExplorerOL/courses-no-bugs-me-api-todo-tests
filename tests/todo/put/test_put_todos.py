@@ -18,11 +18,11 @@ class TestPutTodos(BaseTest):
         with self.ARRANGE():
             updated_todo = GeneratorsEntity.generate_entity_with_random_data(entity_type=ToDo)
         with self.ACT():
-            with self.assert_soft:
-                todo_requester.validated_todo_request_anonim.update(
-                    id=created_todo_with_random_data.id,
-                    data=updated_todo,
-                )
+            todo_requester.validated_todo_request_anonim.update(
+                id=created_todo_with_random_data.id,
+                data=updated_todo,
+                soft_validation=True,
+            )
         with self.ASSERT():
             actual_todos = todo_requester.validated_todo_request_anonim.read_all()
             self.assertions.verify_is_equal(
@@ -45,6 +45,7 @@ class TestPutTodos(BaseTest):
                 id=updated_todo.id,
                 data=updated_todo,
                 response_validator=APIResponseValidatorsTemplates.status_not_found_body_empty,
+                soft_validation=True,
             )
 
     def test_update_todo_without_changing_data(
@@ -58,6 +59,7 @@ class TestPutTodos(BaseTest):
                 todo_requester.validated_todo_request_anonim.update(
                     id=created_todo_with_random_data.id,
                     data=created_todo_with_random_data,
+                    soft_validation=True,
                 )
         with self.ASSERT():
             actual_todos = todo_requester.validated_todo_request_anonim.read_all()

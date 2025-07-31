@@ -1,5 +1,8 @@
+from contextlib import nullcontext
+
 import requests
 
+from support.assertions.assert_soft import assert_soft
 from support.reporters.allure.reporter_base_classes import ClassWithMethodReporting
 
 
@@ -14,27 +17,30 @@ class APIResponseValidator(ClassWithMethodReporting):
         self.__expected_body: str | None = expected_body
         self.__expected_headers: dict[str, str] | None = expected_headers
 
-    def __validate_status_code(self, actual_status_code: int) -> None:
+    def __validate_status_code(self, actual_status_code: int, soft: bool = False) -> None:
         if self.__expected_status_code:
-            assert actual_status_code == self.__expected_status_code, (
-                f'Фактический статус код: {actual_status_code} не равен ожидаемому: {self.__expected_status_code}!'
-            )
-
-    def __validate_body(self, actual_body: str) -> None:
-        if self.__expected_body is not None:
-            assert actual_body == self.__expected_body, (
-                f'Фактическое тело ответа {actual_body!r} не равно ожидаемому {self.__expected_body}!'
-            )
-
-    def __validate_headers(self, actual_headers: dict[str, str]) -> None:
-        if self.__expected_headers is not None:
-            for header_name, expected_header_value in self.__expected_headers.items():
-                actual_header_value = actual_headers.get(header_name)
-                assert actual_header_value == expected_header_value, (
-                    f'Фактическое значение заголовка {header_name}: {actual_header_value!r} не равно ожидаемому: {expected_header_value}!'
+            with assert_soft if soft else nullcontext():
+                assert actual_status_code == self.__expected_status_code, (
+                    f'Фактический статус код: {actual_status_code} не равен ожидаемому: {self.__expected_status_code}!'
                 )
 
-    def validate_response(self, response: requests.Response) -> None:
-        self.__validate_status_code(actual_status_code=response.status_code)
-        self.__validate_body(actual_body=response.text)
-        self.__validate_headers(actual_headers=response.headers)
+    def __validate_body(self, actual_body: str, soft: bool = False) -> None:
+        if self.__expected_body is not None:
+            with assert_soft if soft else nullcontext():
+                assert actual_body == self.__expected_body, (
+                    f'Фактическое тело ответа {actual_body!r} не равно ожидаемому {self.__expected_body}!'
+                )
+
+    def __validate_headers(self, actual_headers: dict[str, str], soft: bool = False) -> None:
+        if self.__expected_headers is not None:
+            with assert_soft if soft else nullcontext():
+                for header_name, expected_header_value in self.__expected_headers.items():
+                    actual_header_value = actual_headers.get(header_name)
+                    assert actual_header_value == expected_header_value, (
+                        f'Фактическое значение заголовка {header_name}: {actual_header_value!r} не равно ожидаемому: {expected_header_value}!'
+                    )
+
+    def validate_response(self, response: requests.Response, soft: bool = False) -> None:
+        self.__validate_status_code(actual_status_code=response.status_code, soft=soft)
+        self.__validate_body(actual_body=response.text, soft=soft)
+        self.__validate_headers(actual_headers=response.headers, soft=soft)

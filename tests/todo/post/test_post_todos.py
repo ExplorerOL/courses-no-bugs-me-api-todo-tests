@@ -15,8 +15,10 @@ class TestPostTodos(BaseTest):
         todo_with_random_data_scope_test: ToDo,
     ):
         with self.ACT():
-            with self.assert_soft:
-                todo_requester.validated_todo_request_anonim.create(data=todo_with_random_data_scope_test)
+            todo_requester.validated_todo_request_anonim.create(
+                data=todo_with_random_data_scope_test,
+                soft_validation=True,
+            )
         with self.ASSERT():
             actual_todo = todo_requester.validated_todo_request_anonim.read_all()[0]
             self.assertions.verify_is_equal(
@@ -33,8 +35,10 @@ class TestPostTodos(BaseTest):
         with self.ARRANGE():
             todo_with_random_data_scope_test.text = GeneratorsString.generate_random_string(length=255)
         with self.ACT():
-            with self.assert_soft:
-                todo_requester.validated_todo_request_anonim.create(data=todo_with_random_data_scope_test)
+            todo_requester.validated_todo_request_anonim.create(
+                data=todo_with_random_data_scope_test,
+                soft_validation=True,
+            )
         with self.ASSERT():
             actual_todo = todo_requester.validated_todo_request_anonim.read_all()[0]
             self.assertions.verify_is_equal(
@@ -53,8 +57,8 @@ class TestPostTodos(BaseTest):
             duplicated_todo = todo_with_random_data_scope_test
             duplicated_todo.id = created_todo_with_random_data.id
         with self.ACT():
-            with self.assert_soft:
-                todo_requester.validated_todo_request_anonim.create(
-                    data=duplicated_todo,
-                    response_validator=APIResponseValidatorsTemplates.status_bad_req_body_empty,
-                )
+            todo_requester.validated_todo_request_anonim.create(
+                data=duplicated_todo,
+                response_validator=APIResponseValidatorsTemplates.status_bad_req_body_empty,
+                soft_validation=True,
+            )
