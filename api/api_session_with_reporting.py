@@ -11,10 +11,10 @@ class APISessionWithReporting(requests.Session):
 
     def send(self, request, **kwargs):
         """Отправка HTTP-запроса"""
-        with self._reporter.step(
-            f"""
-            Отправка HTTP-запроса {request.method} на URL {request.url}\n
-            Заголовки:  {request.headers}\n
-            Тело: {request.body}""",
-        ):
-            return self._session.send(request, **kwargs)
+        with self._reporter.step(f'Отправка HTTP-запроса {request.method} на URL {request.url}'):
+            self._reporter.attach_text(
+                f'Запрос:\n Метод: {request.method},\n URL: {request.url},\nЗаголовки:  {request.headers}\nТело: {request.body}'
+            )
+            response = self._session.send(request, **kwargs)
+            self._reporter.attach_text(f'Ответ:\n Код: {response.status_code},\n Тело: {response.text!r}')
+            return response

@@ -23,17 +23,16 @@ class TestPutTodos(BaseTest):
                 data=updated_todo,
                 soft_validation=True,
             )
-        with self.ASSERT():
+        with self.ASSERT(msg='Проверка количества TODO'):
             actual_todos = todo_requester.validated_todo_request_anonim.read_all()
             self.assertions.verify_is_equal(
                 actual_value=len(actual_todos),
                 expected_value=1,
-                msg='Проверка количества TODO',
             )
+        with self.ASSERT(msg='Проверка данных TODO'):
             self.assertions.verify_is_equal(
                 actual_value=actual_todos[0],
                 expected_value=updated_todo,
-                msg='Проверка данных TODO',
             )
 
     def test_update_non_existing_todo(self, todo_requester: ToDoRequester):
@@ -55,21 +54,19 @@ class TestPutTodos(BaseTest):
     ):
         """Обновление TODO без изменения данных"""
         with self.ACT():
-            with self.assert_soft:
-                todo_requester.validated_todo_request_anonim.update(
-                    id=created_todo_with_random_data.id,
-                    data=created_todo_with_random_data,
-                    soft_validation=True,
-                )
-        with self.ASSERT():
+            todo_requester.validated_todo_request_anonim.update(
+                id=created_todo_with_random_data.id,
+                data=created_todo_with_random_data,
+                soft_validation=True,
+            )
+        with self.ASSERT(msg='Проверка количества TODO'):
             actual_todos = todo_requester.validated_todo_request_anonim.read_all()
             self.assertions.verify_is_equal(
                 actual_value=len(actual_todos),
                 expected_value=1,
-                msg='Проверка количества сообщений',
             )
+        with self.ASSERT(msg='Проверка данных TODO'):
             self.assertions.verify_is_equal(
                 actual_value=actual_todos[0],
                 expected_value=created_todo_with_random_data,
-                msg='Проверка данных сообщения',
             )

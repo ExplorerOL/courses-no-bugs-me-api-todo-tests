@@ -7,7 +7,7 @@ from support.reporters.allure.reporter_base_classes import ClassWithMethodReport
 
 class CustomAssertions(ClassWithMethodReporting):
     @staticmethod
-    def verify_is_equal(actual_value: Any, expected_value: Any, soft: bool = True, msg: str = '') -> None:
+    def verify_is_equal(actual_value: Any, expected_value: Any, soft: bool = True) -> None:
         """Проверка на равенство фактического и ожидаемого значений."""
         with assert_soft if soft else nullcontext():
             assert actual_value == expected_value, (

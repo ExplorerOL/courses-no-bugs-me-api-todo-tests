@@ -13,11 +13,10 @@ class TestGetTodos(BaseTest):
         """Получение пустого списка TODO, когда база данных пуста"""
         with self.ACT():
             todos = todo_requester.validated_todo_request_anonim.read_all(soft_validation=True)
-        with self.ASSERT():
+        with self.ASSERT(msg='Проверка количества TODO'):
             self.assertions.verify_is_equal(
                 actual_value=len(todos),
                 expected_value=0,
-                msg='Проверка количества сообщений',
             )
 
     def test_get_todos_with_existing_entries(
@@ -28,11 +27,10 @@ class TestGetTodos(BaseTest):
         """Получение списка TODO с существующими записями"""
         with self.ACT():
             todos = todo_requester.validated_todo_request_anonim.read_all(soft_validation=True)
-        with self.ASSERT():
+        with self.ASSERT(msg='Проверка количества TODO'):
             self.assertions.verify_is_equal(
                 actual_value=len(todos),
                 expected_value=len(created_ten_or_more_todos_with_random_data),
-                msg='Проверка количества сообщений',
             )
 
     @pytest.mark.parametrize('created_todos_with_random_data', [20], indirect=True)
@@ -51,11 +49,10 @@ class TestGetTodos(BaseTest):
                 offset=offset,
                 soft_validation=True,
             )
-        with self.ASSERT():
+        with self.ASSERT(msg='Проверка количества TODO'):
             self.assertions.verify_is_equal(
                 actual_value=len(actual_todos),
                 expected_value=limit,
-                msg='Проверка количества сообщений',
             )
 
     # Декоратор закомментирован, так как тестовое приложение не поддерживает эдпоинты /mobile
@@ -90,9 +87,8 @@ class TestGetTodos(BaseTest):
                 offset=0,
                 soft_validation=True,
             )
-        with self.ASSERT():
+        with self.ASSERT(msg='Проверка количества TODO'):
             self.assertions.verify_is_equal(
                 actual_value=len(todos),
                 expected_value=len(created_todos_with_random_data),
-                msg='Проверка количества сообщений',
             )
