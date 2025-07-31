@@ -8,6 +8,7 @@ dependencies = [
     "allure-pytest>=2.14.3",
     "pytest>=8.4.1",
     "pytest-base-url>=2.1.0",
+    "pytest-check>=2.5.3",
     "requests>=2.32.4",
 ]
 

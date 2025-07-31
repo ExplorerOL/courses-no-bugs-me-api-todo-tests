@@ -4,19 +4,25 @@ from http import HTTPStatus
 
 from requests import Response
 
-from api.api_request import APISession
+from api.api_request import APIRequest
 from api.interfaces.crud_interface import CRUDInterface
-from api.interfaces.search_interface import SearchInterface
 from config.endpoints import Endpoints
 from models.todo import ToDo
 from support.event_bus.event_bus import event_bus
+from support.reporters.allure.reporter_base_classes import ClassWithMethodReporting
+from support.reporters.allure.reporter_metaclasses import MetaclassABCMetaWithMethodReporting
 
 
-class ToDoRequest(CRUDInterface, SearchInterface):
-    def __init__(self, api_session: APISession):
-        self._api_request = api_session
+class ToDoRequest(
+    CRUDInterface,
+    ClassWithMethodReporting,
+    metaclass=MetaclassABCMetaWithMethodReporting,
+):
+    def __init__(self, api_request: APIRequest):
+        self._api_request = api_request
 
     def create(self, data: ToDo) -> Response:
+        """Отправка запроса на создание"""
         response = self._api_request.session.post(
             self._api_request.base_url + str(Endpoints.TODOS.value),
             json=asdict(data),
@@ -27,6 +33,7 @@ class ToDoRequest(CRUDInterface, SearchInterface):
         return response
 
     def update(self, id, data: ToDo) -> Response:
+        """Отправка запроса на обновление"""
         response = self._api_request.session.put(
             url=self._api_request.base_url + str(Endpoints.TODO_BY_ID.value).format(todo_id=id),
             data=json.dumps(asdict(data)),
@@ -37,6 +44,7 @@ class ToDoRequest(CRUDInterface, SearchInterface):
         return response
 
     def delete(self, id) -> Response:
+        """Отправка запроса на удаление"""
         response = self._api_request.session.delete(
             url=self._api_request.base_url + str(Endpoints.TODO_BY_ID.value).format(todo_id=id)
         )
@@ -45,6 +53,7 @@ class ToDoRequest(CRUDInterface, SearchInterface):
         return response
 
     def read_all(self, offset: int | None = None, limit: int | None = None) -> Response:
+        """Отправка запроса на чтение всех записей"""
         if all([offset is not None, limit is not None]):
             return self._api_request.session.get(
                 self._api_request.base_url + str(Endpoints.TODOS.value),

@@ -3,7 +3,7 @@ import pytest
 from api.response_validators.api_response_validators_templates import APIResponseValidatorsTemplates
 from api.todo_requester import ToDoRequester
 from models.todo import ToDo
-from support.generators_entity import GeneratorEntities
+from support.generators.generators_entity import GeneratorsEntity
 from tests.todo.base_test import BaseTest
 
 
@@ -15,28 +15,34 @@ class TestPutTodos(BaseTest):
         created_todo_with_random_data: ToDo,
     ):
         """Обновление существующего TODO корректными данными"""
-        # ARRANGE
-        updated_todo = GeneratorEntities.generate_entity_with_random_data(type=ToDo)
-        # ACT
-        todo_requester.validated_todo_request_anonim.update(
-            id=created_todo_with_random_data.id,
-            data=updated_todo,
-        )
-        # ASSERT
-        actual_todos = todo_requester.validated_todo_request_anonim.read_all()
-        assert len(actual_todos) == 1
-        assert actual_todos[0] == updated_todo
+        with self.ARRANGE():
+            EXPECTED_TODOS_COUNT = 1
+            updated_todo = GeneratorsEntity.generate_entity_with_random_data(entity_type=ToDo)
+        with self.ACT():
+            todo_requester.validated_todo_request_anonim.update(
+                id=created_todo_with_random_data.id,
+                data=updated_todo,
+                soft_validation=True,
+            )
+        with self.ASSERT():
+            todo_requester.validated_todo_request_admin.verify_todos_count(
+                expected_count=EXPECTED_TODOS_COUNT
+            )
+            todo_requester.validated_todo_request_admin.verify_todo_data(
+                todo_id=updated_todo.id, expected_data=updated_todo
+            )
 
     def test_update_non_existing_todo(self, todo_requester: ToDoRequester):
         """Попытка обновления TODO с несуществующим id"""
-        # ARRANGE
-        updated_todo = GeneratorEntities.generate_entity_with_random_data(type=ToDo)
-        # ACT & ASSERT
-        todo_requester.validated_todo_request_anonim.update(
-            id=updated_todo.id,
-            data=updated_todo,
-            response_validator=APIResponseValidatorsTemplates.status_not_found_body_empty,
-        )
+        with self.ARRANGE():
+            updated_todo = GeneratorsEntity.generate_entity_with_random_data(entity_type=ToDo)
+        with self.ACT():
+            todo_requester.validated_todo_request_anonim.update(
+                id=updated_todo.id,
+                data=updated_todo,
+                response_validator=APIResponseValidatorsTemplates.status_not_found_body_empty,
+                soft_validation=True,
+            )
 
     def test_update_todo_without_changing_data(
         self,
@@ -44,12 +50,19 @@ class TestPutTodos(BaseTest):
         created_todo_with_random_data: ToDo,
     ):
         """Обновление TODO без изменения данных"""
-        # ACT
-        todo_requester.validated_todo_request_anonim.update(
-            id=created_todo_with_random_data.id,
-            data=created_todo_with_random_data,
-        )
-        # ASSERT
-        actual_todos = todo_requester.validated_todo_request_anonim.read_all()
-        assert len(actual_todos) == 1
-        assert actual_todos[0] == created_todo_with_random_data
+        with self.ARRANGE():
+            EXPECTED_TODOS_COUNT = 1
+        with self.ACT():
+            todo_requester.validated_todo_request_anonim.update(
+                id=created_todo_with_random_data.id,
+                data=created_todo_with_random_data,
+                soft_validation=True,
+            )
+        with self.ASSERT():
+            todo_requester.validated_todo_request_admin.verify_todos_count(
+                expected_count=EXPECTED_TODOS_COUNT
+            )
+            todo_requester.validated_todo_request_admin.verify_todo_data(
+                todo_id=created_todo_with_random_data.id,
+                expected_data=created_todo_with_random_data,
+            )
