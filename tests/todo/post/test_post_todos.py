@@ -34,7 +34,10 @@ class TestPostTodos(BaseTest):
     ):
         """Создание TODO с максимальной длиной текста неавторизованным пользователем"""
         with self.ARRANGE():
-            todo_with_random_data_scope_test.text = GeneratorsString.generate_random_string(length=255)
+            MAX_TEXT_LENGTH = 255
+            todo_with_random_data_scope_test.text = GeneratorsString.generate_random_string(
+                length=MAX_TEXT_LENGTH
+            )
         with self.ACT():
             todo_requester.validated_todo_request_anonim.create(
                 data=todo_with_random_data_scope_test,

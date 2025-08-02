@@ -17,6 +17,8 @@ class TestDeleteTodos(BaseTest):
         created_todo_with_random_data: ToDo,
     ):
         """Успешное удаление существующего TODO с корректной авторизацией"""
+        with self.ARRANGE():
+            EXPETED_TODO_COUNT = 0
         with self.ACT():
             todo_requester.validated_todo_request_admin.delete(
                 id=created_todo_with_random_data.id,
@@ -26,7 +28,7 @@ class TestDeleteTodos(BaseTest):
             actual_todos = todo_requester.validated_todo_request_admin.read_all()
             self.assertions.verify_is_equal(
                 actual_value=len(actual_todos),
-                expected_value=0,
+                expected_value=EXPETED_TODO_COUNT,
             )
 
     def test_delete_todo_without_auth_header(
@@ -35,6 +37,8 @@ class TestDeleteTodos(BaseTest):
         created_todo_with_random_data: ToDo,
     ):
         """Попытка удаления TODO без заголовка Authorization"""
+        with self.ARRANGE():
+            EXPETED_TODO_COUNT = 1
         with self.ACT():
             todo_requester.validated_todo_request_anonim.delete(
                 id=created_todo_with_random_data.id,
@@ -45,7 +49,7 @@ class TestDeleteTodos(BaseTest):
             actual_todos = todo_requester.validated_todo_request_admin.read_all()
             self.assertions.verify_is_equal(
                 actual_value=len(actual_todos),
-                expected_value=1,
+                expected_value=EXPETED_TODO_COUNT,
             )
 
     def test_delete_todo_with_invalid_auth(
@@ -55,6 +59,8 @@ class TestDeleteTodos(BaseTest):
         created_todo_with_random_data: ToDo,
     ):
         """Попытка удаления TODO с некорректными учетными данными"""
+        with self.ARRANGE():
+            EXPETED_TODO_COUNT = 1
         with self.ACT():
             validated_todo_request_wrong_auth.delete(
                 id=created_todo_with_random_data.id,
@@ -65,11 +71,13 @@ class TestDeleteTodos(BaseTest):
             actual_todos = todo_requester.validated_todo_request_admin.read_all()
             self.assertions.verify_is_equal(
                 actual_value=len(actual_todos),
-                expected_value=1,
+                expected_value=EXPETED_TODO_COUNT,
             )
 
     def test_delete_non_existent_todo(self, todo_requester: ToDoRequester):
         """Удаление TODO с несуществующим id"""
+        with self.ARRANGE():
+            EXPETED_TODO_COUNT = 0
         with self.ACT():
             todo_requester.validated_todo_request_admin.delete(
                 id=random.randint(1, 1000),
@@ -80,5 +88,5 @@ class TestDeleteTodos(BaseTest):
             actual_todos = todo_requester.validated_todo_request_admin.read_all()
             self.assertions.verify_is_equal(
                 actual_value=len(actual_todos),
-                expected_value=0,
+                expected_value=EXPETED_TODO_COUNT,
             )

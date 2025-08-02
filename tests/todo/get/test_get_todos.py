@@ -11,12 +11,14 @@ from tests.todo.base_test import BaseTest
 class TestGetTodos(BaseTest):
     def test_get_todo_when_database_is_empty(self, todo_requester: ToDoRequester):
         """Получение пустого списка TODO, когда база данных пуста"""
+        with self.ARRANGE():
+            EXPETED_TODO_COUNT = 0
         with self.ACT():
             todos = todo_requester.validated_todo_request_anonim.read_all(soft_validation=True)
         with self.ASSERT(msg='Проверка количества TODO'):
             self.assertions.verify_is_equal(
                 actual_value=len(todos),
-                expected_value=0,
+                expected_value=EXPETED_TODO_COUNT,
             )
 
     def test_get_todos_with_existing_entries(
@@ -81,10 +83,13 @@ class TestGetTodos(BaseTest):
         created_todos_with_random_data: list[ToDo],
     ):
         """Проверка ответа при превышении максимально допустимого значения limit"""
+        with self.ARRANGE():
+            LIMIT = 1000
+            OFFSET = 0
         with self.ACT():
             todos = todo_requester.validated_todo_request_anonim.read_all(
-                limit=1000,
-                offset=0,
+                limit=LIMIT,
+                offset=OFFSET,
                 soft_validation=True,
             )
         with self.ASSERT(msg='Проверка количества TODO'):

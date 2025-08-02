@@ -16,6 +16,7 @@ class TestPutTodos(BaseTest):
     ):
         """Обновление существующего TODO корректными данными"""
         with self.ARRANGE():
+            EXPETED_TODO_COUNT = 1
             updated_todo = GeneratorsEntity.generate_entity_with_random_data(entity_type=ToDo)
         with self.ACT():
             todo_requester.validated_todo_request_anonim.update(
@@ -27,7 +28,7 @@ class TestPutTodos(BaseTest):
             actual_todos = todo_requester.validated_todo_request_anonim.read_all()
             self.assertions.verify_is_equal(
                 actual_value=len(actual_todos),
-                expected_value=1,
+                expected_value=EXPETED_TODO_COUNT,
             )
         with self.ASSERT(msg='Проверка данных TODO'):
             self.assertions.verify_is_equal(
@@ -53,6 +54,8 @@ class TestPutTodos(BaseTest):
         created_todo_with_random_data: ToDo,
     ):
         """Обновление TODO без изменения данных"""
+        with self.ARRANGE():
+            EXPETED_TODO_COUNT = 1
         with self.ACT():
             todo_requester.validated_todo_request_anonim.update(
                 id=created_todo_with_random_data.id,
@@ -63,7 +66,7 @@ class TestPutTodos(BaseTest):
             actual_todos = todo_requester.validated_todo_request_anonim.read_all()
             self.assertions.verify_is_equal(
                 actual_value=len(actual_todos),
-                expected_value=1,
+                expected_value=EXPETED_TODO_COUNT,
             )
         with self.ASSERT(msg='Проверка данных TODO'):
             self.assertions.verify_is_equal(
