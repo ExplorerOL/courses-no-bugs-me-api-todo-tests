@@ -54,3 +54,9 @@ def todo_with_random_data_scope_test() -> ToDo:
     todo = GeneratorsEntity.generate_entity_with_random_data(entity_type=ToDo)
     manager_todo.add_data(data=todo)
     return todo
+
+
+@pytest.fixture(scope='function')
+def actual_todos_max_id(todo_requester: ToDoRequester) -> int:
+    actual_todos = todo_requester.validated_todo_request_admin.read_all()
+    return max(actual_todos, key=lambda todo: todo.id).id

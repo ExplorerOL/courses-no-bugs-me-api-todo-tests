@@ -1,5 +1,3 @@
-import random
-
 import pytest
 
 from api.response_validators.api_response_validators_templates import APIResponseValidatorsTemplates
@@ -74,13 +72,19 @@ class TestDeleteTodos(BaseTest):
                 expected_value=EXPETED_TODO_COUNT,
             )
 
-    def test_delete_non_existent_todo(self, todo_requester: ToDoRequester):
+    def test_delete_non_existed_todo(
+        self,
+        todo_requester: ToDoRequester,
+        created_ten_or_more_todos_with_random_data: list[ToDo],
+        actual_todos_max_id: int,
+    ):
         """Удаление TODO с несуществующим id"""
         with self.ARRANGE():
-            EXPETED_TODO_COUNT = 0
+            expected_todos_count = len(created_ten_or_more_todos_with_random_data)
+            non_existed_id = actual_todos_max_id + 1
         with self.ACT():
             todo_requester.validated_todo_request_admin.delete(
-                id=random.randint(1, 1000),
+                id=non_existed_id,
                 response_validator=APIResponseValidatorsTemplates.status_not_found,
                 soft_validation=True,
             )
@@ -88,5 +92,5 @@ class TestDeleteTodos(BaseTest):
             actual_todos = todo_requester.validated_todo_request_admin.read_all()
             self.assertions.verify_is_equal(
                 actual_value=len(actual_todos),
-                expected_value=EXPETED_TODO_COUNT,
+                expected_value=expected_todos_count,
             )
