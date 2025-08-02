@@ -16,7 +16,7 @@ class TestPutTodos(BaseTest):
     ):
         """Обновление существующего TODO корректными данными"""
         with self.ARRANGE():
-            EXPETED_TODO_COUNT = 1
+            EXPECTED_TODOS_COUNT = 1
             updated_todo = GeneratorsEntity.generate_entity_with_random_data(entity_type=ToDo)
         with self.ACT():
             todo_requester.validated_todo_request_anonim.update(
@@ -24,16 +24,12 @@ class TestPutTodos(BaseTest):
                 data=updated_todo,
                 soft_validation=True,
             )
-        with self.ASSERT(msg='Проверка количества TODO'):
-            actual_todos = todo_requester.validated_todo_request_anonim.read_all()
-            self.assertions.verify_is_equal(
-                actual_value=len(actual_todos),
-                expected_value=EXPETED_TODO_COUNT,
+        with self.ASSERT():
+            todo_requester.validated_todo_request_admin.verify_todos_count(
+                expected_count=EXPECTED_TODOS_COUNT
             )
-        with self.ASSERT(msg='Проверка данных TODO'):
-            self.assertions.verify_is_equal(
-                actual_value=actual_todos[0],
-                expected_value=updated_todo,
+            todo_requester.validated_todo_request_admin.verify_todo_data(
+                todo_id=updated_todo.id, expected_data=updated_todo
             )
 
     def test_update_non_existing_todo(self, todo_requester: ToDoRequester):
@@ -55,21 +51,18 @@ class TestPutTodos(BaseTest):
     ):
         """Обновление TODO без изменения данных"""
         with self.ARRANGE():
-            EXPETED_TODO_COUNT = 1
+            EXPECTED_TODOS_COUNT = 1
         with self.ACT():
             todo_requester.validated_todo_request_anonim.update(
                 id=created_todo_with_random_data.id,
                 data=created_todo_with_random_data,
                 soft_validation=True,
             )
-        with self.ASSERT(msg='Проверка количества TODO'):
-            actual_todos = todo_requester.validated_todo_request_anonim.read_all()
-            self.assertions.verify_is_equal(
-                actual_value=len(actual_todos),
-                expected_value=EXPETED_TODO_COUNT,
+        with self.ASSERT():
+            todo_requester.validated_todo_request_admin.verify_todos_count(
+                expected_count=EXPECTED_TODOS_COUNT
             )
-        with self.ASSERT(msg='Проверка данных TODO'):
-            self.assertions.verify_is_equal(
-                actual_value=actual_todos[0],
-                expected_value=created_todo_with_random_data,
+            todo_requester.validated_todo_request_admin.verify_todo_data(
+                todo_id=created_todo_with_random_data.id,
+                expected_data=created_todo_with_random_data,
             )

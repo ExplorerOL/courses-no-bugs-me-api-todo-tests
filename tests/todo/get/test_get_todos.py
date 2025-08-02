@@ -12,13 +12,10 @@ class TestGetTodos(BaseTest):
     def test_get_todo_when_database_is_empty(self, todo_requester: ToDoRequester):
         """Получение пустого списка TODO, когда база данных пуста"""
         with self.ARRANGE():
-            EXPETED_TODO_COUNT = 0
-        with self.ACT():
-            todos = todo_requester.validated_todo_request_anonim.read_all(soft_validation=True)
-        with self.ASSERT(msg='Проверка количества TODO'):
-            self.assertions.verify_is_equal(
-                actual_value=len(todos),
-                expected_value=EXPETED_TODO_COUNT,
+            EXPECTED_TODOS_COUNT = 0
+        with self.ASSERT():
+            todo_requester.validated_todo_request_admin.verify_todos_count(
+                expected_count=EXPECTED_TODOS_COUNT
             )
 
     def test_get_todos_with_existing_entries(
@@ -27,12 +24,11 @@ class TestGetTodos(BaseTest):
         created_ten_or_more_todos_with_random_data: list[ToDo],
     ):
         """Получение списка TODO с существующими записями"""
-        with self.ACT():
-            todos = todo_requester.validated_todo_request_anonim.read_all(soft_validation=True)
-        with self.ASSERT(msg='Проверка количества TODO'):
-            self.assertions.verify_is_equal(
-                actual_value=len(todos),
-                expected_value=len(created_ten_or_more_todos_with_random_data),
+        with self.ARRANGE():
+            expected_todos_count = len(created_ten_or_more_todos_with_random_data)
+        with self.ASSERT():
+            todo_requester.validated_todo_request_admin.verify_todos_count(
+                expected_count=expected_todos_count
             )
 
     @pytest.mark.parametrize('created_todos_with_random_data', [20], indirect=True)
@@ -51,7 +47,7 @@ class TestGetTodos(BaseTest):
                 offset=offset,
                 soft_validation=True,
             )
-        with self.ASSERT(msg='Проверка количества TODO'):
+        with self.ASSERT():
             self.assertions.verify_is_equal(
                 actual_value=len(actual_todos),
                 expected_value=limit,
@@ -86,14 +82,15 @@ class TestGetTodos(BaseTest):
         with self.ARRANGE():
             LIMIT = 1000
             OFFSET = 0
+            expected_todos_count = len(created_todos_with_random_data)
         with self.ACT():
-            todos = todo_requester.validated_todo_request_anonim.read_all(
+            actual_todos = todo_requester.validated_todo_request_anonim.read_all(
                 limit=LIMIT,
                 offset=OFFSET,
                 soft_validation=True,
             )
-        with self.ASSERT(msg='Проверка количества TODO'):
+        with self.ASSERT():
             self.assertions.verify_is_equal(
-                actual_value=len(todos),
-                expected_value=len(created_todos_with_random_data),
+                actual_value=len(actual_todos),
+                expected_value=expected_todos_count,
             )

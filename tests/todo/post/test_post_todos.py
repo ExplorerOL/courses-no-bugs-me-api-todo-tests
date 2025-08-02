@@ -20,11 +20,10 @@ class TestPostTodos(BaseTest):
                 data=todo_with_random_data_scope_test,
                 soft_validation=True,
             )
-        with self.ASSERT(msg='Проверка данных TODO'):
-            actual_todo = todo_requester.validated_todo_request_anonim.read_all()[0]
-            self.assertions.verify_is_equal(
-                actual_value=actual_todo,
-                expected_value=todo_with_random_data_scope_test,
+        with self.ASSERT():
+            todo_requester.validated_todo_request_anonim.verify_todo_data(
+                todo_id=todo_with_random_data_scope_test.id,
+                expected_data=todo_with_random_data_scope_test,
             )
 
     def test_create_todo_with_max_length_text(
@@ -43,11 +42,10 @@ class TestPostTodos(BaseTest):
                 data=todo_with_random_data_scope_test,
                 soft_validation=True,
             )
-        with self.ASSERT(msg='Проверка данных TODO'):
-            actual_todo = todo_requester.validated_todo_request_anonim.read_all()[0]
-            self.assertions.verify_is_equal(
-                actual_value=actual_todo,
-                expected_value=todo_with_random_data_scope_test,
+        with self.ASSERT():
+            todo_requester.validated_todo_request_anonim.verify_todo_data(
+                todo_id=todo_with_random_data_scope_test.id,
+                expected_data=todo_with_random_data_scope_test,
             )
 
     def test_create_todo_with_existing_id(

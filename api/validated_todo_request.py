@@ -6,6 +6,7 @@ from api.response_validators.api_response_validator import APIResponseValidator
 from api.response_validators.api_response_validators_templates import APIResponseValidatorsTemplates
 from api.todo_request import ToDoRequest
 from models.todo import ToDo
+from support.assertions.custom_assertions import CustomAssertions
 from support.reporters.allure.reporter_base_classes import ClassWithMethodReporting
 from support.reporters.allure.reporter_metaclasses import MetaclassABCMetaWithMethodReporting
 
@@ -70,3 +71,28 @@ class ValidatedToDoRequest(
             return [ToDo(**todo) for todo in body_json]
         except JSONDecodeError:
             return None
+
+    def verify_todos_count(self, expected_count: int, soft: bool = True) -> None:
+        """Проверка количество TODO равно ожидаемому"""
+        actual_todos_count = len(self.read_all())
+        CustomAssertions.verify_is_equal(
+            actual_value=actual_todos_count,
+            expected_value=expected_count,
+            soft=soft,
+        )
+
+    def verify_todo_data(self, todo_id: int, expected_data: ToDo, soft: bool = True) -> None:
+        """Проверка данных TODO"""
+        EXPECTED_FOUND_TODOS_COUNT = 1
+        actual_todos = self.read_all()
+        found_todo = list(filter(lambda todo: todo.id == todo_id, actual_todos))
+        CustomAssertions.verify_is_equal(
+            actual_value=len(found_todo),
+            expected_value=EXPECTED_FOUND_TODOS_COUNT,
+            soft=soft,
+        )
+        CustomAssertions.verify_is_equal(
+            actual_value=found_todo[0],
+            expected_value=expected_data,
+            soft=soft,
+        )
