@@ -72,11 +72,55 @@ class TestGetTodos(BaseTest):
                 soft_validation=True,
             )
 
+    # Чтобы не зависить от положения декоратора, изменяющего эндпоинты можно сделать изменение эндпоинтов
+    # с помощью кастомного маркера и фикстуры, проверяющей маркер для каждого теста
+    # Декоратор закомментирован, так как тестовое приложение не поддерживает эдпоинты /mobile
+    # @pytest.mark.mobile
+    @prepare_todos(quantity=20)
+    @pytest.mark.parametrize('limit, offset', [(2, -1)])
+    def test_get_todos_with_invalid_offset_and_limit_using_marker(
+        self,
+        todo_requester: ToDoRequester,
+        limit: int,
+        offset: int,
+    ):
+        """Передача некорректных значений в offset и limit"""
+        with self.ACT():
+            todo_requester.validated_todo_request_anonim.read_all(
+                limit=limit,
+                offset=offset,
+                response_validator=APIResponseValidatorsTemplates.status_bad_req_body_invalid_query_string,
+                soft_validation=True,
+            )
+
+    # Чтобы не зависить от положения декоратора, изменяющего эндпоинты можно сделать изменение эндпоинтов
+    # с помощью фикстур
+    # Фикстура закомментирована, так как тестовое приложение не поддерживает эдпоинты /mobile
+    # @pytest.mark.usefixtures('set_endpoints_to_mobile')
+    @pytest.mark.parametrize('created_todos_with_random_data', [20], indirect=True)
+    @pytest.mark.parametrize('limit, offset', [(2, -1)])
+    def test_get_todos_with_invalid_offset_and_limit_using_fixtures(
+        self,
+        todo_requester: ToDoRequester,
+        created_todos_with_random_data: list[ToDo],  # noqa
+        limit: int,
+        offset: int,
+    ):
+        """Передача некорректных значений в offset и limit"""
+        with self.ACT():
+            todo_requester.validated_todo_request_anonim.read_all(
+                limit=limit,
+                offset=offset,
+                response_validator=APIResponseValidatorsTemplates.status_bad_req_body_invalid_query_string,
+                soft_validation=True,
+            )
+
     @pytest.mark.parametrize('created_todos_with_random_data', [20], indirect=True)
     def test_get_todos_with_excessive_limit(
         self,
         todo_requester: ToDoRequester,
         created_todos_with_random_data: list[ToDo],
+        request,
     ):
         """Проверка ответа при превышении максимально допустимого значения limit"""
         with self.ARRANGE():

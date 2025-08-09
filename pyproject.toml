@@ -18,6 +18,9 @@ testpaths = [
 
 [tool.pytest.ini_options]
 addopts = "--junitxml=./reports/report-WebScadaMT-last.xml --alluredir ./reports/allure-results --clean-alluredir"
+markers = [
+    "mobile: mark test for mobile device",
+]
 
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
