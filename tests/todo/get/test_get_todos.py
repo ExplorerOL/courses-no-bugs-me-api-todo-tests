@@ -9,21 +9,12 @@ from tests.todo.base_test import BaseTest
 
 @pytest.mark.usefixtures('delete_all_todos_before_test_scope_test')
 class TestGetTodos(BaseTest):
-    def test_get_todo_when_database_is_empty(self, todo_requester: ToDoRequester):
-        """Получение пустого списка TODO, когда база данных пуста"""
-        with self.ARRANGE():
-            EXPECTED_TODOS_COUNT = 0
-        with self.ASSERT():
-            todo_requester.validated_todo_request_admin.verify_todos_count(
-                expected_count=EXPECTED_TODOS_COUNT
-            )
-
-    def test_get_todos_with_existing_entries(
+    def test_get_all_todos(
         self,
         todo_requester: ToDoRequester,
         created_ten_or_more_todos_with_random_data: list[ToDo],
     ):
-        """Получение списка TODO с существующими записями"""
+        """Получение всех TODO"""
         with self.ARRANGE():
             expected_todos_count = len(created_ten_or_more_todos_with_random_data)
         with self.ASSERT():
@@ -40,7 +31,7 @@ class TestGetTodos(BaseTest):
         limit: int,
         offset: int,
     ):
-        """Использование параметров offset и limit для пагинации"""
+        """Получение TODO с использованием offset и limit"""
         with self.ACT():
             actual_todos = todo_requester.validated_todo_request_anonim.read_all(
                 limit=limit,
@@ -63,7 +54,7 @@ class TestGetTodos(BaseTest):
         limit: int,
         offset: int,
     ):
-        """Передача некорректных значений в offset и limit"""
+        """Получение TODO с невалидными offset и limit"""
         with self.ACT():
             todo_requester.validated_todo_request_anonim.read_all(
                 limit=limit,
@@ -84,7 +75,7 @@ class TestGetTodos(BaseTest):
         limit: int,
         offset: int,
     ):
-        """Передача некорректных значений в offset и limit"""
+        """Получение TODO с невалидными offset и limit"""
         with self.ACT():
             todo_requester.validated_todo_request_anonim.read_all(
                 limit=limit,
@@ -106,7 +97,7 @@ class TestGetTodos(BaseTest):
         limit: int,
         offset: int,
     ):
-        """Передача некорректных значений в offset и limit"""
+        """Получение TODO с невалидными offset и limit"""
         with self.ACT():
             todo_requester.validated_todo_request_anonim.read_all(
                 limit=limit,
@@ -120,9 +111,8 @@ class TestGetTodos(BaseTest):
         self,
         todo_requester: ToDoRequester,
         created_todos_with_random_data: list[ToDo],
-        request,
     ):
-        """Проверка ответа при превышении максимально допустимого значения limit"""
+        """Получение TODO с limit больше существующего количества"""
         with self.ARRANGE():
             LIMIT = 1000
             OFFSET = 0

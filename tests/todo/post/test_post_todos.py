@@ -9,12 +9,12 @@ from tests.todo.base_test import BaseTest
 
 @pytest.mark.usefixtures('delete_all_todos_before_test_scope_test')
 class TestPostTodos(BaseTest):
-    def test_create_todo_with_valid_data(
+    def test_create_todo(
         self,
         todo_requester: ToDoRequester,
         todo_with_random_data_scope_test: ToDo,
     ):
-        """Создание TODO с валидными данными неавторизованным пользователем"""
+        """Создание TODO"""
         with self.ACT():
             todo_requester.validated_todo_request_anonim.create(
                 data=todo_with_random_data_scope_test,
@@ -26,12 +26,12 @@ class TestPostTodos(BaseTest):
                 expected_data=todo_with_random_data_scope_test,
             )
 
-    def test_create_todo_with_max_length_text(
+    def test_create_todo_with_max_text_length(
         self,
         todo_requester: ToDoRequester,
         todo_with_random_data_scope_test: ToDo,
     ):
-        """Создание TODO с максимальной длиной текста неавторизованным пользователем"""
+        """Создание TODO с максимальной длиной текста"""
         with self.ARRANGE():
             MAX_TEXT_LENGTH = 255
             todo_with_random_data_scope_test.text = GeneratorsString.generate_random_string(
@@ -54,7 +54,7 @@ class TestPostTodos(BaseTest):
         created_todo_with_random_data: ToDo,
         todo_with_random_data_scope_test: ToDo,
     ):
-        """Создание TODO с существующим id неавторизованным пользователем"""
+        """Создание TODO с существующим id"""
         with self.ARRANGE():
             duplicated_todo = todo_with_random_data_scope_test
             duplicated_todo.id = created_todo_with_random_data.id

@@ -9,12 +9,12 @@ from tests.todo.base_test import BaseTest
 
 @pytest.mark.usefixtures('delete_all_todos_before_test_scope_test')
 class TestPutTodos(BaseTest):
-    def test_update_existing_todo_with_valid_data(
+    def test_update_todo(
         self,
         todo_requester: ToDoRequester,
         created_todo_with_random_data: ToDo,
     ):
-        """Обновление существующего TODO корректными данными"""
+        """Обновление TODO"""
         with self.ARRANGE():
             EXPECTED_TODOS_COUNT = 1
             updated_todo = GeneratorsEntity.generate_entity_with_random_data(entity_type=ToDo)
@@ -32,8 +32,8 @@ class TestPutTodos(BaseTest):
                 todo_id=updated_todo.id, expected_data=updated_todo
             )
 
-    def test_update_non_existing_todo(self, todo_requester: ToDoRequester):
-        """Попытка обновления TODO с несуществующим id"""
+    def test_update_not_existing_todo(self, todo_requester: ToDoRequester):
+        """Обновление TODO с несуществующим id"""
         with self.ARRANGE():
             updated_todo = GeneratorsEntity.generate_entity_with_random_data(entity_type=ToDo)
         with self.ACT():
