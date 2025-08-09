@@ -3,7 +3,7 @@ import requests
 from support.reporters.allure.reporter_protocol import ReporterProtocol
 
 
-class APISessionWithReporting(requests.Session):
+class HTTPSessionWithReporting(requests.Session):
     def __init__(self, api_session: requests.Session, reporter: ReporterProtocol):
         self._reporter = reporter
         self._session = api_session

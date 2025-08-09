@@ -1,5 +1,6 @@
 from api.factory_requests import FactoryRequests
 from api.todo_request import ToDoRequest
+from api.validated_todo_notification import ValidatedToDoNotification
 from api.validated_todo_request import ValidatedToDoRequest
 from config.config_general import config_general
 from data.user_creds import user_creds
@@ -33,6 +34,11 @@ class ToDoRequester:
             timeout_ms=timeout_ms,
             is_validated=True,
         )
+        self.__validated_todo_notification_anonim = FactoryRequests.create_todo_notification(
+            base_url=base_url,
+            timeout_ms=timeout_ms,
+            is_validated=True,
+        )
 
     @property
     def todo_request_anonim(self) -> ToDoRequest:
@@ -49,6 +55,10 @@ class ToDoRequester:
     @property
     def validated_todo_request_admin(self) -> ValidatedToDoRequest:
         return self.__validated_todo_request_admin
+
+    @property
+    def validated_todo_notification_anonim(self) -> ValidatedToDoNotification:
+        return self.__validated_todo_notification_anonim
 
 
 todo_requester = ToDoRequester(

@@ -1,23 +1,21 @@
 from json import JSONDecodeError
 
-from api.api_request import APIRequest
 from api.interfaces.crud_interface import CRUDInterface
 from api.response_validators.api_response_validator import APIResponseValidator
 from api.response_validators.api_response_validators_templates import APIResponseValidatorsTemplates
+from api.rest.rest_request import RESTRequest
 from api.todo_request import ToDoRequest
 from models.todo import ToDo
 from support.assertions.custom_assertions import CustomAssertions
-from support.reporters.allure.reporter_base_classes import ClassWithMethodReporting
 from support.reporters.allure.reporter_metaclasses import MetaclassABCMetaWithMethodReporting
 
 
 class ValidatedToDoRequest(
     CRUDInterface,
-    ClassWithMethodReporting,
     metaclass=MetaclassABCMetaWithMethodReporting,
 ):
-    def __init__(self, api_session: APIRequest):
-        self.__todo_request = ToDoRequest(api_request=api_session)
+    def __init__(self, rest_request: RESTRequest):
+        self.__todo_request = ToDoRequest(rest_request=rest_request)
 
     def create(
         self,
@@ -81,11 +79,11 @@ class ValidatedToDoRequest(
             soft=soft,
         )
 
-    def verify_todo_data(self, todo_id: int, expected_data: ToDo, soft: bool = True) -> None:
+    def verify_todo_data(self, expected_data: ToDo, soft: bool = True) -> None:
         """Проверка данных TODO"""
         EXPECTED_FOUND_TODOS_COUNT = 1
         actual_todos = self.read_all()
-        found_todo = list(filter(lambda todo: todo.id == todo_id, actual_todos))
+        found_todo = list(filter(lambda todo: todo.id == expected_data.id, actual_todos))
         CustomAssertions.verify_is_equal(
             actual_value=len(found_todo),
             expected_value=EXPECTED_FOUND_TODOS_COUNT,

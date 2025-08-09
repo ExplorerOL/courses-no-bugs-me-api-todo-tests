@@ -2,17 +2,19 @@ import pytest
 
 from api.response_validators.api_response_validators_templates import APIResponseValidatorsTemplates
 from api.todo_requester import ToDoRequester
+from fixtures.fixtures_notifications import delete_all_notifications_before_test_scope_test  # noqa
 from models.todo import ToDo
 from support.generators.generators_entity import GeneratorsEntity
 from tests.todo.base_test import BaseTest
 
 
-@pytest.mark.usefixtures('delete_all_todos_before_test_scope_test')
 class TestPutTodos(BaseTest):
     def test_update_todo(
         self,
         todo_requester: ToDoRequester,
+        delete_all_todos_before_test_scope_test,
         created_todo_with_random_data: ToDo,
+        delete_all_notifications_before_test_scope_test,  # noqa
     ):
         """Обновление TODO"""
         with self.ARRANGE():
@@ -28,10 +30,10 @@ class TestPutTodos(BaseTest):
             todo_requester.validated_todo_request_admin.verify_todos_count(
                 expected_count=EXPECTED_TODOS_COUNT
             )
-            todo_requester.validated_todo_request_admin.verify_todo_data(
-                todo_id=updated_todo.id, expected_data=updated_todo
-            )
+            todo_requester.validated_todo_request_admin.verify_todo_data(expected_data=updated_todo)
+            todo_requester.validated_todo_notification_anonim.verify_no_notifications_present()
 
+    @pytest.mark.usefixtures('delete_all_todos_before_test_scope_test')
     def test_update_not_existing_todo(self, todo_requester: ToDoRequester):
         """Обновление TODO с несуществующим id"""
         with self.ARRANGE():
@@ -44,6 +46,7 @@ class TestPutTodos(BaseTest):
                 soft_validation=True,
             )
 
+    @pytest.mark.usefixtures('delete_all_todos_before_test_scope_test')
     def test_update_todo_without_changing_data(
         self,
         todo_requester: ToDoRequester,
@@ -63,6 +66,5 @@ class TestPutTodos(BaseTest):
                 expected_count=EXPECTED_TODOS_COUNT
             )
             todo_requester.validated_todo_request_admin.verify_todo_data(
-                todo_id=created_todo_with_random_data.id,
                 expected_data=created_todo_with_random_data,
             )

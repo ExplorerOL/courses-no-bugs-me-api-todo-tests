@@ -1,11 +1,11 @@
 import requests
 
-from api.api_session_with_reporting import APISessionWithReporting
+from api.rest.http_session_with_reporting import HTTPSessionWithReporting
 from config.config_general import config_general
 from models.creds import CredsUsernamePassword
 
 
-class APIRequest:
+class RESTRequest:
     def __init__(
         self, base_url: str, auth_creds: CredsUsernamePassword | None = None, timeout_ms: int = 10000
     ):
@@ -13,7 +13,7 @@ class APIRequest:
         self._auth_creds = auth_creds
         self._timeput_ms = timeout_ms
 
-        self._http_session = APISessionWithReporting(
+        self._http_session = HTTPSessionWithReporting(
             api_session=requests.Session(),
             reporter=config_general.reporter,
         )
