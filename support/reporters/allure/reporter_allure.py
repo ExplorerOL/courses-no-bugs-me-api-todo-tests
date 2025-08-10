@@ -68,23 +68,18 @@ class ReporterAllure(ReporterProtocol):
     def step_decorator(self, func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            step_self = args[0]
             first_line_from_docstring = str(func.__doc__).split('\n')[0] if func.__doc__ else ''
-            with allure.step(
-                f'Step: {first_line_from_docstring} | {step_self.__module__} -> {step_self.__class__.__name__} -> {func.__name__}: {kwargs}'
-            ):
-                return func(*args, **kwargs)
-
-        return wrapper
-
-    def static_step_decorator(self, func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            first_line_from_docstring = str(func.__doc__).split('\n')[0] if func.__doc__ else ''
-            with allure.step(
-                f'Step: {first_line_from_docstring} | {func.__module__} -> {func.__class__.__name__} -> {func.__name__}: {kwargs}'
-            ):
-                return func(*args, **kwargs)
+            if isinstance(func, staticmethod):
+                with allure.step(
+                    f'Step: {first_line_from_docstring} | {func.__module__} -> {func.__class__.__name__} -> {func.__name__}: {kwargs}'
+                ):
+                    return func(*args, **kwargs)
+            else:
+                step_self = args[0]
+                with allure.step(
+                    f'Step: {first_line_from_docstring} | {step_self.__module__} -> {step_self.__class__.__name__} -> {func.__name__}: {kwargs}'
+                ):
+                    return func(*args, **kwargs)
 
         return wrapper
 
