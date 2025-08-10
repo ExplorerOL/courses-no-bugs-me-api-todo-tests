@@ -87,3 +87,12 @@ class ReporterAllure(ReporterProtocol):
                 return func(*args, **kwargs)
 
         return wrapper
+
+    def set_parent_suite(self, parent_suite_name: str):
+        return allure.dynamic.parent_suite(parent_suite_name=parent_suite_name)
+
+    def set_suite(self, suite_name: str):
+        return allure.dynamic.suite(suite_name=suite_name)
+
+    def set_sub_suite(self, sub_suite_name: str):
+        return allure.dynamic.sub_suite(sub_suite_name=sub_suite_name)
