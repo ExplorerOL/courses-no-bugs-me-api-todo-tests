@@ -8,13 +8,9 @@ from api.todo_notification import ToDoNotification, WSNotification
 from models.todo import ToDo
 from support.assertions.assert_soft import assert_soft
 from support.assertions.custom_assertions import CustomAssertions
-from support.reporters.allure.reporter_metaclasses import MetaclassABCMetaWithMethodReporting
 
 
-class ValidatedToDoNotification(
-    NotificationInterface,
-    metaclass=MetaclassABCMetaWithMethodReporting,
-):
+class ValidatedToDoNotification(NotificationInterface):
     def __init__(self, ws_notification: WSNotification):
         self._todo_notification = ToDoNotification(ws_notification=ws_notification)
 

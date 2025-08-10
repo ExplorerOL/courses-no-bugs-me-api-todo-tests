@@ -1,10 +1,14 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import Any, TypeVar
+
+from support.reporters.allure.reporter_metaclasses import (
+    MetaclassWithMethodReporting,
+)
 
 T = TypeVar('T')
 
 
-class CRUDInterface(ABC):
+class CRUDInterface(metaclass=MetaclassWithMethodReporting):
     @abstractmethod
     def create(self, data: T) -> T: ...
 

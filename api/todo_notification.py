@@ -1,12 +1,8 @@
 from api.interfaces.search_interface import SearchInterface
 from api.ws.ws_notification import WSNotification
-from support.reporters.allure.reporter_metaclasses import MetaclassABCMetaWithMethodReporting
 
 
-class ToDoNotification(
-    SearchInterface,
-    metaclass=MetaclassABCMetaWithMethodReporting,
-):
+class ToDoNotification(SearchInterface):
     def __init__(self, ws_notification: WSNotification):
         self._ws_notification = ws_notification
 

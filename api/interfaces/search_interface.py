@@ -1,10 +1,13 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import overload
 
 from models.todo import ToDo
+from support.reporters.allure.reporter_metaclasses import (
+    MetaclassWithMethodReporting,
+)
 
 
-class SearchInterface(ABC):
+class SearchInterface(metaclass=MetaclassWithMethodReporting):
     @abstractmethod
     @overload
     def read_all(self) -> list[ToDo]: ...

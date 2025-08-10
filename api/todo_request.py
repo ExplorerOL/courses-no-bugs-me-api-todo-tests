@@ -9,13 +9,9 @@ from api.rest.rest_request import RESTRequest
 from config.endpoints import Endpoints
 from models.todo import ToDo
 from support.event_bus.event_bus import event_bus
-from support.reporters.allure.reporter_metaclasses import MetaclassABCMetaWithMethodReporting
 
 
-class ToDoRequest(
-    CRUDInterface,
-    metaclass=MetaclassABCMetaWithMethodReporting,
-):
+class ToDoRequest(CRUDInterface):
     def __init__(self, rest_request: RESTRequest):
         self._api_request = rest_request
 

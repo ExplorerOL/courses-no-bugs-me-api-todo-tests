@@ -7,13 +7,9 @@ from api.rest.rest_request import RESTRequest
 from api.todo_request import ToDoRequest
 from models.todo import ToDo
 from support.assertions.custom_assertions import CustomAssertions
-from support.reporters.allure.reporter_metaclasses import MetaclassABCMetaWithMethodReporting
 
 
-class ValidatedToDoRequest(
-    CRUDInterface,
-    metaclass=MetaclassABCMetaWithMethodReporting,
-):
+class ValidatedToDoRequest(CRUDInterface):
     def __init__(self, rest_request: RESTRequest):
         self.__todo_request = ToDoRequest(rest_request=rest_request)
 

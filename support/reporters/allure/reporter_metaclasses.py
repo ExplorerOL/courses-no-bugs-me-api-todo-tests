@@ -13,9 +13,9 @@ class MetaclassWithMethodReporting(type):
         return super().__new__(cls, name, bases, attrs)
 
 
-class MetaclassABCMetaWithMethodReporting(ABCMeta, MetaclassWithMethodReporting):
+class ClassABCMetaWithMethodReporting(ABCMeta, MetaclassWithMethodReporting):
     pass
 
 
-class MetaclassProtocolMetaWithMethodReporting(_ProtocolMeta, MetaclassWithMethodReporting):
+class ClassProtocolMetaWithMethodReporting(_ProtocolMeta, MetaclassWithMethodReporting):
     pass
